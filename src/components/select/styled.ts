@@ -1,9 +1,14 @@
 import styled from "styled-components";
 import { ChevronUp, ChevronDown } from "@styled-icons/boxicons-regular";
 
-import { OptionProps, OptionsProps } from "types";
+export interface OptionsProps {
+  readonly show: boolean;
+}
+export interface OptionProps {
+  readonly selected: boolean;
+}
 
-export const Container = styled.div`
+export const ModeSwitcher = styled.div`
   width: 50px;
   padding: 5px;
 
@@ -11,9 +16,10 @@ export const Container = styled.div`
   align-items: center;
   gap: 5px;
 
-  border: 1px solid #ececec;
+  border: 0.5px solid #ececec;
   border-radius: 5px;
   outline: none;
+  cursor: pointer;
 
   position: relative;
 
@@ -25,11 +31,12 @@ export const Value = styled.span`
   flex-grow: 1;
   color: #d0d0d0;
   font-weight: 600;
+  line-height: 1.5;
 `;
 export const Divider = styled.div`
   background-color: #ececec;
   align-self: stretch;
-  width: 1px;
+  width: 0.5px;
 `;
 export const SvgChevronUp = styled(ChevronUp)`
   fill: #d0d0d0;
@@ -59,6 +66,9 @@ export const Option = styled.li<OptionProps>`
   font-weight: 600;
 
   cursor: pointer;
-  background-color: ${(props) => (props.highlighted ? "#ececec" : "")};
+
+  &:hover {
+    background-color: #ececec;
+  }
   background-color: ${(props) => (props.selected ? "#d0d0d0" : "")};
 `;
