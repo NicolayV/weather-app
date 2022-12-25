@@ -12,13 +12,19 @@ export interface CardFooterProps {
   wind: { speed: number };
 }
 
-export const CardFooter = (props: CardFooterProps) => {
-  const { main, wind } = props;
+export const CardFooter = (props: any) => {
+  const { id, temp, temp_notation, feels_like, humidity, pressure, wind } =
+    props;
 
   return (
     <S.Footer>
-      <TemperaturePanel main={main} />
-      <WeatherPanel main={main} wind={wind} />
+      <TemperaturePanel
+        id={id}
+        temp={temp}
+        temp_notation={temp_notation}
+        feels_like={feels_like}
+      />
+      <WeatherPanel humidity={humidity} pressure={pressure} wind={wind} />
     </S.Footer>
   );
 };

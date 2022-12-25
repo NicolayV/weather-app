@@ -8,16 +8,13 @@ export interface WeatherPanelProps {
   wind: { speed: number };
 }
 
-export const WeatherPanel = (props: WeatherPanelProps) => {
-  const {
-    main: { humidity, pressure },
-    wind: { speed },
-  } = props;
+export const WeatherPanel = (props: any) => {
+  const { humidity, pressure, wind } = props;
 
   return (
     <S.WeatherPanel>
       <S.WeatherIndicator>
-        Wind: <span>{speed} m/s</span>
+        Wind: <span>{wind} m/s</span>
       </S.WeatherIndicator>
       <S.WeatherIndicator>
         Humidity: <span>{humidity}%</span>

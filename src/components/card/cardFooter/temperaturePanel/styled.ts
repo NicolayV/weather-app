@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export interface TemperatureOptionProps {
+  readonly tempSelected: boolean;
+}
+
 export const TemperaturePanel = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,23 +40,21 @@ export const TemperatureSwitcher = styled.div`
   gap: 5px;
   background-color: transparent;
 `;
-export const CelsiusTemperature = styled.span`
+export const TemperatureOption = styled.span<TemperatureOptionProps>`
   font-size: 14px;
   font-weight: 600;
   background-color: transparent;
   cursor: pointer;
+  color: ${(props) => (props.tempSelected ? "#111517" : "#d0d0d0")};
+
+  &:hover {
+    color: #3c99dc;
+  }
 `;
 export const Divider = styled.div`
   background-color: #808080;
   align-self: stretch;
   width: 1px;
-`;
-export const FahrenheitTemperature = styled.span`
-  font-size: 14px;
-  font-weight: 600;
-  background-color: transparent;
-  color: #d0d0d0;
-  cursor: pointer;
 `;
 export const TemperatureIndicator = styled.span`
   font-size: 10px;

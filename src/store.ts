@@ -8,15 +8,17 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import { languageReducer } from "features/langSwitcher/lang-slice";
+import { weatherReducer } from "features/weather/weather-slice";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["selector"],
+  whitelist: ["selector", "weather"],
 };
 
 const rootReducer = combineReducers({
   selector: languageReducer,
+  weather: weatherReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

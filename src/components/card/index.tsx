@@ -1,25 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 // import { Close } from "@styled-icons/ionicons-solid";
 import { CardFooter } from "./cardFooter";
 import { CardHeader } from "./cardHeader";
 
 export interface CardProps {
-  data: any;
+  id: number | null;
+  name: string;
+  country: string;
+  dt_txt: string;
+  dt: number | null;
+  weather_icon: string | null;
+  weather_description: string;
+  temp: number | null;
+  temp_notation: "celsius" | "fahrenheit";
+  feels_like: number | null;
+  wind: number | null;
+  humidity: number | null;
+  pressure: number | null;
 }
 
 export const Card = (props: CardProps) => {
-  const {
-    data: { list, city },
-  } = props;
-
-  const { main, wind } = list[0];
+  type WeatherKind = "cold" | "warmly";
+  const [weatherKind, setWeatherKind] = useState<WeatherKind>("cold");
 
   return (
     <CardEl>
-      <CardHeader list={list} city={city} />
+      <CardHeader {...props} />
       <Chart>Chart</Chart>
-      <CardFooter main={main} wind={wind} />
+      <CardFooter {...props} />
     </CardEl>
   );
 };
@@ -50,5 +59,5 @@ export const Chart = styled.div`
   flex-grow: 1;
 
   background-color: transparent;
-  border: 0.5px solid blue;
+  border: 0.5px dashed blue;
 `;

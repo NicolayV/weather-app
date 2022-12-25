@@ -1,3 +1,6 @@
+import { deleteCity } from "features/weather/weather-slice";
+import { useAppDispatch } from "store";
+
 import * as S from "./styled";
 
 export interface CardHeaderProps {
@@ -13,17 +16,18 @@ export interface CardHeaderProps {
   };
 }
 
-export const CardHeader = (props: CardHeaderProps) => {
-  const {
-    list,
-    city: { name, country },
-  } = props;
+export const CardHeader = (props: any) => {
+  const { id, name, country, dt_txt, weather_icon, weather_description } =
+    props;
+  const dispatch = useAppDispatch();
 
-  const { weather, dt_txt } = list[0];
+  const deleteHandler = () => {
+    dispatch(deleteCity(id));
+  };
 
   return (
     <S.Header>
-      <S.CloseButton>
+      <S.CloseButton onClick={deleteHandler}>
         <S.SvgClose />
       </S.CloseButton>
 
@@ -35,8 +39,10 @@ export const CardHeader = (props: CardHeaderProps) => {
       </S.TitlePanel>
 
       <S.WeatherIconBar>
-        <S.WeatherIcon>{weather[0].icon}</S.WeatherIcon>
-        <S.WeatherType>{weather[0].main}</S.WeatherType>
+        <S.WeatherIcon
+          src={`https://openweathermap.org/img/wn/${weather_icon}@4x.png`}
+        />
+        <S.WeatherType>{weather_description}</S.WeatherType>
       </S.WeatherIconBar>
     </S.Header>
   );

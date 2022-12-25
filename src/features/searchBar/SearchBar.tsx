@@ -1,10 +1,14 @@
 import React from "react";
 import { SearchField } from "components/searchField";
 import * as S from "./styled";
+import { useAppDispatch } from "store";
+import { loadCityByName } from "../weather/weather-slice";
 
 export const SearchBar = () => {
-  const inputFieldValue = (value: string) => {
-    console.log(value);
+  const dispatch = useAppDispatch();
+
+  const inputFieldValue = (city: string) => {
+    dispatch(loadCityByName(city));
   };
 
   return (

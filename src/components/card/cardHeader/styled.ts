@@ -30,17 +30,25 @@ export const SubTitle = styled.span`
 export const WeatherIconBar = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 5px;
 
   background-color: transparent;
-  border: 0.5px solid blue;
+  /* border: 0.5px solid blue; */
 `;
-export const WeatherIcon = styled.div``;
+export const WeatherIcon = styled.img.attrs({
+  alt: "weather icon",
+})`
+  width: 42px;
+  background-color: transparent;
+  /* border: 1px solid red; */
+`;
 export const WeatherType = styled.span`
+  padding-right: 10px;
   font-size: 12px;
   font-weight: 600;
   color: #d0d0d0;
   background-color: transparent;
+  /* border: 1px solid red; */
 `;
 
 export const CloseButton = styled.button`
@@ -62,7 +70,6 @@ export const CloseButton = styled.button`
     }
   }
 `;
-
 export const SvgClose = styled(Close)`
   fill: #d0d0d0;
   width: 16px;
