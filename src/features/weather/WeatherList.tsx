@@ -3,14 +3,21 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { useAppDispatch } from "store";
 
-import { Card } from "components/card";
-import { selectCityListWeather, selectCityStatus } from "./weather-selector";
+import { Card, CardLoading, CardProps } from "components/card";
+import { selectCitiesWeather } from "./weather-selector";
 import { clearCity, addCity } from "./weather-slice";
+import {
+  loadCurrentLocation,
+  loadLocalCity,
+} from "features/localCity/localCity-slice";
+import { selectLocalCity } from "features/localCity/localCity-selector";
 
 export const WeatherList = () => {
-  const status = useSelector(selectCityStatus);
-  const list = useSelector(selectCityListWeather);
   const dispatch = useAppDispatch();
+
+  const localCity = useSelector(selectLocalCity);
+
+  const { list, status } = useSelector(selectCitiesWeather);
 
   useEffect(() => {
     if (status === "received") {
@@ -19,11 +26,33 @@ export const WeatherList = () => {
     }
   }, [dispatch, status]);
 
+  useEffect(() => {
+    if (localCity.current_location === "") {
+      dispatch(loadCurrentLocation(""));
+    }
+  }, [dispatch, localCity.current_location]);
+
+  useEffect(() => {
+    if (localCity.current_location && localCity.status === "idle") {
+      dispatch(loadLocalCity(localCity.current_location));
+    }
+  }, [dispatch, localCity.current_location, localCity.status]);
+
   return (
     <>
       <Container>
         <Wrapper>
-          {list.map((card) => (
+          {localCity.status === "received" ? (
+            <Card {...localCity} />
+          ) : (
+            <CardLoading {...localCity}>
+              {localCity.status === "rejected"
+                ? "Cannot load local weather"
+                : "Loading local weather ..."}
+            </CardLoading>
+          )}
+
+          {list.map((card: CardProps) => (
             <Card key={card.id} {...card} />
           ))}
         </Wrapper>

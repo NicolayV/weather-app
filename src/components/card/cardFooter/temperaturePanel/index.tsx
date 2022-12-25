@@ -1,28 +1,18 @@
-import {
-  selectActiveTempNotation,
-  selectCityListWeather,
-} from "features/weather/weather-selector";
 import { updateCityNotation } from "features/weather/weather-slice";
-import { useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "store";
+import { useAppDispatch } from "store";
 import * as S from "./styled";
 
 export interface TemperaturePanelProps {
-  main: {
-    temp: number;
-    feels_like: number;
-  };
+  id: number | null;
+  temp: number | null;
+  temp_notation: "celsius" | "fahrenheit";
+  feels_like: number | null;
 }
 
-export const TemperaturePanel = (props: any) => {
+export const TemperaturePanel = (props: TemperaturePanelProps) => {
   const { id, temp, temp_notation, feels_like } = props;
-  const dispatch = useAppDispatch();
 
-  const list = useSelector(selectCityListWeather);
-  const activeTempNotation = useSelector((state: RootState) =>
-    selectActiveTempNotation(state, { id })
-  );
-  console.log(activeTempNotation);
+  const dispatch = useAppDispatch();
 
   const clickHandle = (notation: "celsius" | "fahrenheit") => {
     dispatch(
@@ -33,10 +23,27 @@ export const TemperaturePanel = (props: any) => {
     );
   };
 
+  const temperature = (temp: number | null) => {
+    if (temp !== null) {
+      const currentTemp = Math.round(temp);
+
+      if (currentTemp > 0) {
+        return `+ ${currentTemp}`;
+      } else {
+        return currentTemp;
+      }
+    }
+    return temp;
+  };
+
   return (
     <S.TemperaturePanel>
       <S.TemperatureSection>
-        <S.Temperature>{temp}</S.Temperature>
+        <S.Temperature>
+          {temp !== null
+            ? temperature(temp_notation === "celsius" ? temp : temp + 32)
+            : "null"}
+        </S.Temperature>
 
         <S.TemperatureSwitcher>
           <S.TemperatureOption

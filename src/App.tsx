@@ -1,29 +1,29 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { LangSwitcher } from "features/langSwitcher/LangSwitcher";
 import { SearchBar } from "features/searchBar/SearchBar";
-import axios from "axios";
 import { WeatherList } from "features/weather/WeatherList";
-
-// const mapArr = dataWeather.list.map((item, idx) => {
-//   return { idx: new Date(item.dt * 1000).toLocaleString() };
-// });
-// console.log(mapArr);
+import { useTranslation } from "react-i18next";
 
 const App = () => {
-  // navigator.geolocation.getCurrentPosition((position) => {
-  //   console.log(position);
-  // });
-  const getLocation = async () => {
-    const location = await axios.get("https://ipapi.co/json");
-    console.log(location.data);
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (language: any) => {
+    i18n.changeLanguage(language);
   };
-  useEffect(() => {
-    getLocation();
-  }, []);
 
   return (
     <>
       <LangSwitcher />
+      <button
+        onClick={() => {
+          console.log("first");
+          return changeLanguage("en");
+        }}
+      >
+        EN
+      </button>
+      <button onClick={() => changeLanguage("ru")}>RU</button>
+      <div>{t("text")}</div>
       <SearchBar />
       <WeatherList />
     </>

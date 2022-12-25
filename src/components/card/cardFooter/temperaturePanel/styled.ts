@@ -23,7 +23,7 @@ export const TemperatureSection = styled.div`
 `;
 export const Temperature = styled.span`
   padding-top: 15px;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 600;
   display: flex;
   background-color: transparent;

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { ReactNode } from "react";
 import styled from "styled-components";
-// import { Close } from "@styled-icons/ionicons-solid";
 import { CardFooter } from "./cardFooter";
 import { CardHeader } from "./cardHeader";
 
@@ -20,12 +19,21 @@ export interface CardProps {
   pressure: number | null;
 }
 
-export const Card = (props: CardProps) => {
-  type WeatherKind = "cold" | "warmly";
-  const [weatherKind, setWeatherKind] = useState<WeatherKind>("cold");
+export interface CardLoadingProps extends CardProps {
+  children: ReactNode;
+}
 
+export const CardLoading = (props: CardLoadingProps) => {
   return (
-    <CardEl>
+    <CardEl main={props.temp ? Math.sign(props.temp) : -1}>
+      <Loading>{props.children}</Loading>
+    </CardEl>
+  );
+};
+
+export const Card = (props: CardProps) => {
+  return (
+    <CardEl main={props.temp ? Math.sign(props.temp) : -1}>
       <CardHeader {...props} />
       <Chart>Chart</Chart>
       <CardFooter {...props} />
@@ -33,11 +41,15 @@ export const Card = (props: CardProps) => {
   );
 };
 
-export const CardEl = styled.div`
+export interface CardElProps {
+  readonly main: number;
+}
+
+export const CardEl = styled.div<CardElProps>`
   padding: 5px;
   width: 300px;
   height: 250px;
-  background-color: #ebeafe;
+  background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};
 
   display: flex;
   flex-direction: column;
@@ -60,4 +72,14 @@ export const Chart = styled.div`
 
   background-color: transparent;
   border: 0.5px dashed blue;
+`;
+export const Loading = styled.div`
+  font-size: 16px;
+  font-weight: 300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+
+  background-color: transparent;
 `;

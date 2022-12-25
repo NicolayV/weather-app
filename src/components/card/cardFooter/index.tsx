@@ -3,28 +3,20 @@ import { TemperaturePanel } from "./temperaturePanel";
 import { WeatherPanel } from "./weatherPanel";
 
 export interface CardFooterProps {
-  main: {
-    temp: number;
-    feels_like: number;
-    humidity: number;
-    pressure: number;
-  };
-  wind: { speed: number };
+  id: number | null;
+  temp: number | null;
+  temp_notation: "celsius" | "fahrenheit";
+  feels_like: number | null;
+  wind: number | null;
+  humidity: number | null;
+  pressure: number | null;
 }
 
-export const CardFooter = (props: any) => {
-  const { id, temp, temp_notation, feels_like, humidity, pressure, wind } =
-    props;
-
+export const CardFooter = (props: CardFooterProps) => {
   return (
     <S.Footer>
-      <TemperaturePanel
-        id={id}
-        temp={temp}
-        temp_notation={temp_notation}
-        feels_like={feels_like}
-      />
-      <WeatherPanel humidity={humidity} pressure={pressure} wind={wind} />
+      <TemperaturePanel {...props} />
+      <WeatherPanel {...props} />
     </S.Footer>
   );
 };

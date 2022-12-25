@@ -11,7 +11,11 @@ export const WeatherPanel = styled.div`
   /* border: 1px solid blue; */
 `;
 
-export const WeatherIndicator = styled.span`
+export interface WeatherIndicatorProps {
+  readonly main: number;
+}
+
+export const WeatherIndicator = styled.span<WeatherIndicatorProps>`
   font-size: 10px;
   font-weight: 800;
   background-color: transparent;
@@ -22,6 +26,6 @@ export const WeatherIndicator = styled.span`
     font-size: inherit;
     font-weight: inherit;
     background-color: transparent;
-    color: #3c99dc;
+    color: ${(props) => (props.main >= 0 ? "#ffa437" : "#3c99dc")};
   }
 `;

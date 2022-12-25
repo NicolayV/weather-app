@@ -14,27 +14,29 @@ export const loadCityByName = createAsyncThunk<
 
 export type Status = "idle" | "rejected" | "loading" | "received";
 
+interface CityProps {
+  id: number | null;
+  name: string;
+  country: string;
+  dt_txt: string;
+  dt: number | null;
+  weather_icon: string | null;
+  weather_description: string;
+  temp: number | null;
+  temp_notation: "celsius" | "fahrenheit";
+  feels_like: number | null;
+  wind: number | null;
+  humidity: number | null;
+  pressure: number | null;
+  forecast: {
+    dt: number;
+    dt_txt: string;
+  }[];
+}
+
 interface WeatherSliceProps {
   status: Status;
-  city: {
-    id: number | null;
-    name: string;
-    country: string;
-    dt_txt: string;
-    dt: number | null;
-    weather_icon: string | null;
-    weather_description: string;
-    temp: number | null;
-    temp_notation: "celsius" | "fahrenheit";
-    feels_like: number | null;
-    wind: number | null;
-    humidity: number | null;
-    pressure: number | null;
-    forecast: {
-      dt: number;
-      dt_txt: string;
-    }[];
-  };
+  city: CityProps;
   list: any[];
   error: string | null;
 }
@@ -57,6 +59,7 @@ const initialState: WeatherSliceProps = {
     pressure: null,
     forecast: [],
   },
+
   list: [],
   error: null,
 };
