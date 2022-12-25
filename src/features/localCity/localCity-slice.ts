@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "store";
 
 export const loadLocalCity = createAsyncThunk<
   {
@@ -74,12 +75,27 @@ const localCitySlice = createSlice({
   name: "@@local-city",
   initialState,
   reducers: {
-    clearLocalCity: (state) => {
-      state = initialState;
+    deleteLocalCity: (state, action) => {
+      state.status = "rejected";
+      state.id = null;
+      state.name = "";
+      state.country = "";
+      state.dt_txt = "";
+      state.dt = null;
+      state.weather_icon = null;
+      state.weather_description = "";
+      state.temp = null;
+      state.temp_notation = "celsius";
+      state.feels_like = null;
+      state.wind = null;
+      state.humidity = null;
+      state.pressure = null;
+      state.forecast = [];
+      state.error = null;
     },
 
     updateLocalCityNotation: (state, action) => {
-      state.temp_notation = action.payload;
+      state.temp_notation = action.payload.temp_notation;
     },
   },
 
@@ -126,5 +142,7 @@ const localCitySlice = createSlice({
 });
 
 export const localCityReducer = localCitySlice.reducer;
-export const { clearLocalCity, updateLocalCityNotation } =
+export const { deleteLocalCity, updateLocalCityNotation } =
   localCitySlice.actions;
+
+export const selectLocalCity = (state: RootState) => state.localCity;

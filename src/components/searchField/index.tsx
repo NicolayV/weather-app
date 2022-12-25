@@ -3,7 +3,8 @@ import { onChange, onSubmit, SearchFieldProps } from "../../types/search";
 import * as S from "./styled";
 
 export const SearchField = (props: SearchFieldProps) => {
-  const { fieldValue } = props;
+  const { fieldValue, isOpen, options, currentCityHandler } = props;
+
   const [value, setValue] = useState("");
 
   const onSubmit: onSubmit = (e) => {
@@ -13,12 +14,10 @@ export const SearchField = (props: SearchFieldProps) => {
       setValue("");
     }
   };
+
   const onChangeHandler: onChange = (e) => {
     setValue(e.target.value);
   };
-
-  const options = ["Boston, US", "Toronto, CA", "Kiev, UA"];
-  const isOpen = true;
 
   return (
     <S.Form onSubmit={onSubmit}>
@@ -26,21 +25,22 @@ export const SearchField = (props: SearchFieldProps) => {
       <S.Button>Add</S.Button>
 
       <S.SearchList show={isOpen}>
-        {options.map((option) => {
-          return (
-            <S.SearchItem
-              // selected={isOptionSelected(option)}
-              onClick={(e) => {
-                e.stopPropagation();
-                // selectOption(option);
-                // setIsOpen(false);
-              }}
-              key={option}
-            >
-              {option}
-            </S.SearchItem>
-          );
-        })}
+        {options.length ? (
+          options.map(({ id, name, country, coord: { lat, lon } }) => {
+            return (
+              <S.SearchItem
+                onClick={() => currentCityHandler({ lat, lon, name, country })}
+                key={id}
+              >
+                {`${name}, ${country}`}
+              </S.SearchItem>
+            );
+          })
+        ) : (
+          <S.SearchItem>
+            Not found. To make search more precise put the city's name
+          </S.SearchItem>
+        )}
       </S.SearchList>
     </S.Form>
   );

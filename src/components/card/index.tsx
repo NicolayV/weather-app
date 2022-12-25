@@ -1,7 +1,8 @@
 import React, { ReactNode } from "react";
-import styled from "styled-components";
 import { CardFooter } from "./cardFooter";
 import { CardHeader } from "./cardHeader";
+
+import * as S from "./styled";
 
 export interface CardProps {
   id: number | null;
@@ -17,69 +18,32 @@ export interface CardProps {
   wind: number | null;
   humidity: number | null;
   pressure: number | null;
+  deleteHandler: (id: number | null) => void;
+  updateCityNotationHandler: (
+    notation: "celsius" | "fahrenheit",
+    id: number | null
+  ) => void;
 }
 
-export interface CardLoadingProps extends CardProps {
+export interface CardLoadingProps
+  extends Omit<CardProps, "deleteHandler" | "updateCityNotationHandler"> {
   children: ReactNode;
 }
 
 export const CardLoading = (props: CardLoadingProps) => {
   return (
-    <CardEl main={props.temp ? Math.sign(props.temp) : -1}>
-      <Loading>{props.children}</Loading>
-    </CardEl>
+    <S.CardEl main={props.temp ? Math.sign(props.temp) : -1}>
+      <S.Loading>{props.children}</S.Loading>
+    </S.CardEl>
   );
 };
 
 export const Card = (props: CardProps) => {
   return (
-    <CardEl main={props.temp ? Math.sign(props.temp) : -1}>
+    <S.CardEl main={props.temp ? Math.sign(props.temp) : -1}>
       <CardHeader {...props} />
-      <Chart>Chart</Chart>
+      <S.Chart>Chart</S.Chart>
       <CardFooter {...props} />
-    </CardEl>
+    </S.CardEl>
   );
 };
-
-export interface CardElProps {
-  readonly main: number;
-}
-
-export const CardEl = styled.div<CardElProps>`
-  padding: 5px;
-  width: 300px;
-  height: 250px;
-  background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};
-
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-
-  /* border: 1px solid red; */
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  &:hover {
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
-      rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-  }
-`;
-
-export const Chart = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-
-  background-color: transparent;
-  border: 0.5px dashed blue;
-`;
-export const Loading = styled.div`
-  font-size: 16px;
-  font-weight: 300;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-
-  background-color: transparent;
-`;

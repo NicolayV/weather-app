@@ -1,5 +1,4 @@
-import { updateCityNotation } from "features/weather/weather-slice";
-import { useAppDispatch } from "store";
+import { useTranslation } from "react-i18next";
 import * as S from "./styled";
 
 export interface TemperaturePanelProps {
@@ -7,21 +6,15 @@ export interface TemperaturePanelProps {
   temp: number | null;
   temp_notation: "celsius" | "fahrenheit";
   feels_like: number | null;
+  updateCityNotationHandler: (
+    notation: "celsius" | "fahrenheit",
+    id: number | null
+  ) => void;
 }
 
 export const TemperaturePanel = (props: TemperaturePanelProps) => {
-  const { id, temp, temp_notation, feels_like } = props;
-
-  const dispatch = useAppDispatch();
-
-  const clickHandle = (notation: "celsius" | "fahrenheit") => {
-    dispatch(
-      updateCityNotation({
-        temp_notation: notation,
-        id,
-      })
-    );
-  };
+  const { id, temp, temp_notation, feels_like, updateCityNotationHandler } =
+    props;
 
   const temperature = (temp: number | null) => {
     if (temp !== null) {
@@ -36,6 +29,8 @@ export const TemperaturePanel = (props: TemperaturePanelProps) => {
     return temp;
   };
 
+  const { t } = useTranslation("translation");
+
   return (
     <S.TemperaturePanel>
       <S.TemperatureSection>
@@ -48,7 +43,7 @@ export const TemperaturePanel = (props: TemperaturePanelProps) => {
         <S.TemperatureSwitcher>
           <S.TemperatureOption
             tempSelected={temp_notation === "celsius" ? true : false}
-            onClick={() => clickHandle("celsius")}
+            onClick={() => updateCityNotationHandler("celsius", id)}
           >
             &deg;C
           </S.TemperatureOption>
@@ -57,7 +52,7 @@ export const TemperaturePanel = (props: TemperaturePanelProps) => {
 
           <S.TemperatureOption
             tempSelected={temp_notation === "fahrenheit" ? true : false}
-            onClick={() => clickHandle("fahrenheit")}
+            onClick={() => updateCityNotationHandler("fahrenheit", id)}
           >
             &deg;F
           </S.TemperatureOption>
@@ -65,7 +60,8 @@ export const TemperaturePanel = (props: TemperaturePanelProps) => {
       </S.TemperatureSection>
 
       <S.TemperatureIndicator>
-        Feels like: <span>{feels_like} &deg;C</span>
+        {t("feels_like", { ns: "translation" })}:{" "}
+        <span>{feels_like} &deg;C</span>
       </S.TemperatureIndicator>
     </S.TemperaturePanel>
   );

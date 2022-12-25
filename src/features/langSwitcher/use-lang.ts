@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import { useAppDispatch } from "store";
 import { useSelector } from "react-redux";
-import { setLanguage } from "./lang-slice";
-import { selectLanguage } from "./lang-selector";
 import { Languages } from "types";
+import { useTranslation } from "react-i18next";
+import { selectLanguage, setLanguage } from "./lang-slice";
 
 interface UseLangProps {
   (): {
@@ -15,6 +16,14 @@ interface UseLangProps {
 const useLang: UseLangProps = () => {
   const dispatch = useAppDispatch();
   const { lang: value } = useSelector(selectLanguage);
+  const { i18n } = useTranslation("translation");
+
+  useEffect(() => {
+    const onClickLanguageChange = (language: string) => {
+      i18n.changeLanguage(language);
+    };
+    onClickLanguageChange(value.toLowerCase());
+  }, [i18n, value]);
 
   const options: Languages[] = ["EN", "UA", "RU"];
 

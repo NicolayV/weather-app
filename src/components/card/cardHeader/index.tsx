@@ -1,6 +1,3 @@
-import { deleteCity } from "features/weather/weather-slice";
-import { useAppDispatch } from "store";
-
 import * as S from "./styled";
 
 export interface CardHeaderProps {
@@ -10,16 +7,19 @@ export interface CardHeaderProps {
   dt_txt: string;
   weather_icon: string | null;
   weather_description: string;
+  deleteHandler: (id: number | null) => void;
 }
 
 export const CardHeader = (props: CardHeaderProps) => {
-  const { id, name, country, dt_txt, weather_icon, weather_description } =
-    props;
-
-  const dispatch = useAppDispatch();
-  const deleteHandler = () => {
-    dispatch(deleteCity(id));
-  };
+  const {
+    id,
+    name,
+    country,
+    dt_txt,
+    weather_icon,
+    weather_description,
+    deleteHandler,
+  } = props;
 
   const date = new Date(dt_txt)
     .toUTCString()
@@ -30,7 +30,7 @@ export const CardHeader = (props: CardHeaderProps) => {
 
   return (
     <S.Header>
-      <S.CloseButton onClick={deleteHandler}>
+      <S.CloseButton onClick={() => deleteHandler(id)}>
         <S.SvgClose />
       </S.CloseButton>
 

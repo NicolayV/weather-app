@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import * as S from "./styled";
 
 export interface WeatherPanelProps {
@@ -9,17 +10,18 @@ export interface WeatherPanelProps {
 
 export const WeatherPanel = (props: WeatherPanelProps) => {
   const { humidity, pressure, wind } = props;
+  const { t } = useTranslation("translation");
 
   return (
     <S.WeatherPanel>
       <S.WeatherIndicator main={props.temp ? Math.sign(props.temp) : -1}>
-        Wind: <span>{wind} m/s</span>
+        {t("wind", { ns: "translation" })}: <span>{wind} m/s</span>
       </S.WeatherIndicator>
       <S.WeatherIndicator main={props.temp ? Math.sign(props.temp) : -1}>
-        Humidity: <span>{humidity}%</span>
+        {t("humidity", { ns: "translation" })}: <span>{humidity}%</span>
       </S.WeatherIndicator>
       <S.WeatherIndicator main={props.temp ? Math.sign(props.temp) : -1}>
-        Pressure: <span>{pressure}Pa</span>
+        {t("pressure", { ns: "translation" })}: <span>{pressure}Pa</span>
       </S.WeatherIndicator>
     </S.WeatherPanel>
   );

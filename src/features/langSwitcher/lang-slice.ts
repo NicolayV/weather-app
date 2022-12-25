@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "store";
 import { Languages } from "types";
 
 interface LangSlice {
@@ -21,3 +22,5 @@ const languageSlice = createSlice({
 
 export const { setLanguage } = languageSlice.actions;
 export const languageReducer = languageSlice.reducer;
+
+export const selectLanguage = (state: RootState) => state.selector;

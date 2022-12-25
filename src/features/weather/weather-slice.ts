@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "store";
 
 export const loadCityByName = createAsyncThunk<
   {
@@ -8,7 +9,7 @@ export const loadCityByName = createAsyncThunk<
   string,
   //   { extra: Extra }
   { extra: any }
->("@@search/load-city-by-name", (name, { extra: { client, api } }) => {
+>("@@weather/load-by-name", (name, { extra: { client, api } }) => {
   return client.get(api.searchByCity(name));
 });
 
@@ -145,3 +146,5 @@ const weatherSlice = createSlice({
 export const weatherReducer = weatherSlice.reducer;
 export const { clearCity, addCity, deleteCity, updateCityNotation } =
   weatherSlice.actions;
+
+export const selectCitiesWeather = (state: RootState) => state.weather;

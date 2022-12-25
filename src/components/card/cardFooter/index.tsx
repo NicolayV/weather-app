@@ -10,6 +10,10 @@ export interface CardFooterProps {
   wind: number | null;
   humidity: number | null;
   pressure: number | null;
+  updateCityNotationHandler: (
+    notation: "celsius" | "fahrenheit",
+    id: number | null
+  ) => void;
 }
 
 export const CardFooter = (props: CardFooterProps) => {
