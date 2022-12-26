@@ -8,7 +8,6 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import { languageReducer } from "features/langSwitcher/lang-slice";
-import { weatherReducer } from "features/weather/weather-slice";
 import { localCityReducer } from "features/localCity/localCity-slice";
 import { autocompleteCitiesSliceReducer } from "features/search/search-slice";
 import { coordCitiesSliceReducer } from "features/cities/cities-slice";
@@ -24,7 +23,6 @@ const rootReducer = combineReducers({
   search: autocompleteCitiesSliceReducer,
   coord: coordCitiesSliceReducer,
 
-  weather: weatherReducer,
   localCity: localCityReducer,
 });
 

@@ -30,7 +30,7 @@ export const Chart = styled.div`
   flex-grow: 1;
 
   background-color: transparent;
-  border: 0.5px dashed blue;
+  /* border: 0.5px dashed blue; */
 `;
 export const Loading = styled.div`
   font-size: 16px;

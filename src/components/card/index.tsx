@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { CardFooter } from "./cardFooter";
 import { CardHeader } from "./cardHeader";
+import { ChartLine } from "./chart";
 
 import * as S from "./styled";
 
@@ -23,7 +24,14 @@ export interface CardProps {
     notation: "celsius" | "fahrenheit",
     id: number | null
   ) => void;
+  forecast: any[];
 }
+//   forecast: {
+//     dt: number;
+//     temp: number;
+//     dt_tx: string;
+//   }[];
+// }
 
 export interface CardLoadingProps
   extends Omit<CardProps, "deleteHandler" | "updateCityNotationHandler"> {
@@ -42,7 +50,9 @@ export const Card = (props: CardProps) => {
   return (
     <S.CardEl main={props.temp ? Math.sign(props.temp) : -1}>
       <CardHeader {...props} />
-      <S.Chart>Chart</S.Chart>
+      <S.Chart>
+        <ChartLine {...props} />
+      </S.Chart>
       <CardFooter {...props} />
     </S.CardEl>
   );

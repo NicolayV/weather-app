@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
 
 export const loadAutocompleteCity = createAsyncThunk<
@@ -45,7 +45,11 @@ const initialState: AutocompleteCitiesProps = {
 const autocompleteCitiesSlice = createSlice({
   name: "@@search",
   initialState,
-  reducers: {},
+  reducers: {
+    setStatus: (state, action: PayloadAction<Status>) => {
+      state.status = action.payload;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
@@ -77,4 +81,5 @@ const autocompleteCitiesSlice = createSlice({
 });
 
 export const autocompleteCitiesSliceReducer = autocompleteCitiesSlice.reducer;
+export const { setStatus } = autocompleteCitiesSlice.actions;
 export const selectAutocompleteCities = (state: RootState) => state.search;

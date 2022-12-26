@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SearchField } from "components/searchField";
 import * as S from "./styled";
 import { useAppDispatch } from "store";
-import { loadAutocompleteCity, selectAutocompleteCities } from "./search-slice";
+import {
+  loadAutocompleteCity,
+  selectAutocompleteCities,
+  setStatus,
+} from "./search-slice";
 import { useSelector } from "react-redux";
 import { loadCoordCity } from "features/cities/cities-slice";
+import { selectCoordCitiesSlice } from "../cities/cities-slice";
 
 export interface CurrentCityHandlerProps {
   lat: number | null;
@@ -16,6 +21,16 @@ export interface CurrentCityHandlerProps {
 export const SearchBar = () => {
   const dispatch = useAppDispatch();
   const { list, status } = useSelector(selectAutocompleteCities);
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  useEffect(() => {
+    if (status === "received") {
+      setIsOpen(true);
+    }
+    if (status !== "received") {
+      setIsOpen(false);
+    }
+  }, [status]);
 
   const inputFieldValue = (city: string) => {
     dispatch(loadAutocompleteCity(city));
@@ -31,22 +46,15 @@ export const SearchBar = () => {
       const strLat = lat.toString();
       const strLon = lon.toString();
       dispatch(loadCoordCity({ name, country, strLat, strLon }));
+      dispatch(setStatus("idle"));
     }
-    console.log("value");
-  };
-  const isOpenHandler = () => {
-    if (status === "received") {
-      return true;
-    }
-
-    return false;
   };
 
   return (
     <S.Container>
       <S.Wrapper>
         <SearchField
-          isOpen={isOpenHandler()}
+          isOpen={isOpen}
           options={list}
           fieldValue={inputFieldValue}
           currentCityHandler={currentCityHandler}
