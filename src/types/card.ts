@@ -41,6 +41,7 @@ export interface CardProps extends CityProps {
 }
 
 export interface ChartLineProps {
+  temp: number | null;
   forecast: {
     dt: number;
     temp: number;

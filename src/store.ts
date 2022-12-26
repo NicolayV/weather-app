@@ -15,7 +15,7 @@ import { citiesSliceReducer } from "features/cities/cities-slice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["selector", "search", "cities"],
+  whitelist: ["location", "selector", "search", "cities"],
 };
 
 const rootReducer = combineReducers({
