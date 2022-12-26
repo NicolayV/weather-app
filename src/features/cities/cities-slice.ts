@@ -39,7 +39,7 @@ export interface CoordCityProps {
 
 interface CoordCitiesProps {
   status: Status;
-  list: CoordCityProps[];
+  list: any[];
   error: string | null;
 }
 
@@ -52,13 +52,25 @@ const initialState: CoordCitiesProps = {
 const coordCitiesSlice = createSlice({
   name: "@@coord",
   initialState,
-  reducers: {},
+  reducers: {
+    deleteCity: (state, action) => {
+      state.list = state.list.filter((city) => {
+        return city.id !== action.payload;
+      });
+    },
+    updateCityNotation: (state, action) => {
+      let currentCity = state.list.find((city) => {
+        return city.id === action.payload.id;
+      });
+      currentCity.temp_notation = action.payload.temp_notation;
+    },
+  },
 
   extraReducers: (builder) => {
     builder
       .addCase(loadCoordCity.fulfilled, (state, action) => {
         const currentCity: CoordCityProps = {
-          id: action.payload.data.current.id,
+          id: action.payload.data.current.dt,
           name: action.meta.arg.name,
           country: action.meta.arg.country,
           dt: action.payload.data.current.dt,
@@ -100,4 +112,7 @@ const coordCitiesSlice = createSlice({
 });
 
 export const coordCitiesSliceReducer = coordCitiesSlice.reducer;
+
+export const { deleteCity, updateCityNotation } = coordCitiesSlice.actions;
+
 export const selectCoordCitiesSlice = (state: RootState) => state.coord;

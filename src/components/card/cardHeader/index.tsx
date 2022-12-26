@@ -5,6 +5,7 @@ export interface CardHeaderProps {
   name: string;
   country: string;
   dt_txt: string;
+  dt: number | null;
   weather_icon: string | null;
   weather_description: string;
   deleteHandler: (id: number | null) => void;
@@ -15,13 +16,13 @@ export const CardHeader = (props: CardHeaderProps) => {
     id,
     name,
     country,
-    dt_txt,
+    dt,
     weather_icon,
     weather_description,
     deleteHandler,
   } = props;
 
-  const date = new Date(dt_txt)
+  const date = new Date(dt ? dt * 1000 : 0)
     .toUTCString()
     .slice(0, -7)
     .split(" ")
