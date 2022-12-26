@@ -5,17 +5,13 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   position: relative;
-
   background-color: transparent;
-  /* border: 1px solid green; */
 `;
 export const TitlePanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-
   background-color: transparent;
-  /* border: 1px solid blue; */
 `;
 export const Title = styled.div`
   font-size: 18px;
@@ -33,14 +29,12 @@ export const WeatherIconBar = styled.div`
   gap: 5px;
 
   background-color: transparent;
-  /* border: 0.5px solid blue; */
 `;
 export const WeatherIcon = styled.img.attrs({
   alt: "weather icon",
 })`
   width: 42px;
   background-color: transparent;
-  /* border: 1px solid red; */
 `;
 export const WeatherType = styled.span`
   padding-right: 10px;
@@ -48,22 +42,17 @@ export const WeatherType = styled.span`
   font-weight: 600;
   color: #d0d0d0;
   background-color: transparent;
-  /* border: 1px solid red; */
 `;
-
 export const CloseButton = styled.button`
   padding: 0;
   margin: 0;
   border: none;
   outline: none;
-
   position: absolute;
   right: -2px;
   top: -2px;
   cursor: pointer;
-
   background-color: transparent;
-
   &:hover {
     & svg {
       fill: #999999;
@@ -74,5 +63,4 @@ export const SvgClose = styled(Close)`
   fill: #d0d0d0;
   width: 16px;
   background-color: transparent;
-  /* border: 1px solid red; */
 `;

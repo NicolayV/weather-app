@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { onChange, onSubmit, SearchFieldProps } from "../../types/search";
 import * as S from "./styled";
 
 export const SearchField = (props: SearchFieldProps) => {
   const { fieldValue, isOpen, options, currentCityHandler } = props;
-
   const [value, setValue] = useState("");
 
   const onSubmit: onSubmit = (e) => {
@@ -23,7 +22,6 @@ export const SearchField = (props: SearchFieldProps) => {
     <S.Form onSubmit={onSubmit}>
       <S.SearchInput onChange={onChangeHandler} value={value} />
       <S.Button>Add</S.Button>
-
       <S.SearchList show={isOpen}>
         {options.length ? (
           options.map(({ id, name, country, coord: { lat, lon } }) => {

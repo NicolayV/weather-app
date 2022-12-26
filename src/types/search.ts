@@ -1,5 +1,5 @@
-import { AutocompleteCityProps } from "features/search/search-slice";
 import { ChangeEventHandler, FormEventHandler } from "react";
+import { loadCityNamesProps } from "types";
 
 export interface SearchFieldProps {
   fieldValue: (text: string) => void;
@@ -10,7 +10,7 @@ export interface SearchFieldProps {
     country: string;
   }) => void;
   isOpen: boolean;
-  options: AutocompleteCityProps[];
+  options: loadCityNamesProps[];
 }
 export type onChange = ChangeEventHandler<HTMLInputElement>;
 export type onSubmit = FormEventHandler<HTMLFormElement>;

@@ -1,17 +1,7 @@
+import { CardProps } from "types";
 import * as S from "./styled";
 
-export interface CardHeaderProps {
-  id: number | null;
-  name: string;
-  country: string;
-  dt_txt: string;
-  dt: number | null;
-  weather_icon: string | null;
-  weather_description: string;
-  deleteHandler: (id: number | null) => void;
-}
-
-export const CardHeader = (props: CardHeaderProps) => {
+export const CardHeader = (props: CardProps) => {
   const {
     id,
     name,

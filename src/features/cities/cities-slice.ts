@@ -1,45 +1,29 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
+import {
+  CityDataProps,
+  CityProps,
+  Extra,
+  loadCityProps,
+  Status,
+  UpdateCityNotationProps,
+} from "types";
 
-export const loadCoordCity = createAsyncThunk<
+export const loadCity = createAsyncThunk<
   {
-    // data: Country[];
-    data: any;
+    data: CityDataProps;
   },
-  { name: string; country: string; strLat: string; strLon: string },
-  //   { extra: Extra }
-  { extra: any }
->("@@cities/load-by-coord", (coord, { extra: { client, api } }) => {
-  console.log(coord);
-  return client.get(api.coordSearch(coord));
-});
+  loadCityProps,
+  { extra: Extra }
+>(
+  "@@cities/load-city",
 
-export type Status = "idle" | "rejected" | "loading" | "received";
-
-export interface CoordCityProps {
-  id: number | null;
-  name: string;
-  country: string;
-  //   dt_txt: string;
-  dt: number | null;
-  weather_icon: string | null;
-  weather_description: string;
-  temp: number | null;
-  temp_notation: "celsius" | "fahrenheit";
-  feels_like: number | null;
-  wind: number | null;
-  humidity: number | null;
-  pressure: number | null;
-
-  forecast: {
-    dt: number;
-    temp: number;
-  }[];
-}
+  (coord, { extra: { client, api } }) => client.get(api.getCityByCoord(coord))
+);
 
 interface CoordCitiesProps {
   status: Status;
-  list: any[];
+  list: CityProps[];
   error: string | null;
 }
 
@@ -49,60 +33,62 @@ const initialState: CoordCitiesProps = {
   error: null,
 };
 
-const coordCitiesSlice = createSlice({
-  name: "@@coord",
+const citiesSlice = createSlice({
+  name: "@@cities",
   initialState,
   reducers: {
-    deleteCity: (state, action) => {
-      state.list = state.list.filter((city) => {
-        return city.id !== action.payload;
-      });
+    deleteCity: (state, { payload }: PayloadAction<number | null>) => {
+      state.list = state.list.filter((city) => city.id !== payload);
     },
-    updateCityNotation: (state, action) => {
-      let currentCity = state.list.find((city) => {
-        return city.id === action.payload.id;
-      });
-      currentCity.temp_notation = action.payload.temp_notation;
+
+    updateCity: (
+      state,
+      { payload }: PayloadAction<UpdateCityNotationProps>
+    ) => {
+      const city = state.list.find(({ id }) => id === payload.id);
+      if (city) {
+        city.temp_notation = payload.temp_notation;
+      }
     },
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(loadCoordCity.fulfilled, (state, action) => {
-        const currentCity: CoordCityProps = {
-          id: action.payload.data.current.dt,
-          name: action.meta.arg.name,
-          country: action.meta.arg.country,
-          dt: action.payload.data.current.dt,
-          weather_icon: action.payload.data.current.weather[0].icon,
-          weather_description: action.payload.data.current.weather[0].main,
-          temp: action.payload.data.current.temp,
+      .addCase(loadCity.fulfilled, (state, { payload: { data }, meta }) => {
+        const currentCity: CityProps = {
+          id: data.current.dt,
+          name: meta.arg.name,
+          country: meta.arg.country,
+          dt: data.current.dt,
+          weather_icon: data.current.weather[0].icon,
+          weather_description: data.current.weather[0].main,
+          temp: data.current.temp,
           temp_notation: "celsius",
-          feels_like: action.payload.data.current.feels_like,
-          wind: action.payload.data.current.wind_speed,
-          pressure: action.payload.data.current.pressure,
-          humidity: action.payload.data.current.humidity,
-          forecast: action.payload.data.daily.map(
-            (daily: { dt: number; temp: { day: number } }) => ({
-              dt: daily.dt,
-              temp: daily.temp.day,
+          feels_like: data.current.feels_like,
+          wind: data.current.wind_speed,
+          pressure: data.current.pressure,
+          humidity: data.current.humidity,
+          forecast: data.daily.map(
+            (day: { dt: number; temp: { day: number } }) => ({
+              dt: day.dt,
+              temp: day.temp.day,
             })
           ),
         };
 
-        state.status = "received";
         state.list = [{ ...currentCity }, ...state.list];
+        state.status = "received";
       })
 
       .addMatcher(
-        (action) => action.type.endsWith("/load-by-coord/rejected"),
+        (action) => action.type.endsWith("/load-city/rejected"),
         (state) => {
           state.status = "rejected";
           state.error = "Cannot load data";
         }
       )
       .addMatcher(
-        (action) => action.type.endsWith("/load-by-coord/pending"),
+        (action) => action.type.endsWith("/load-city/pending"),
         (state) => {
           state.status = "loading";
           state.error = null;
@@ -111,8 +97,6 @@ const coordCitiesSlice = createSlice({
   },
 });
 
-export const coordCitiesSliceReducer = coordCitiesSlice.reducer;
-
-export const { deleteCity, updateCityNotation } = coordCitiesSlice.actions;
-
-export const selectCoordCitiesSlice = (state: RootState) => state.coord;
+export const citiesSliceReducer = citiesSlice.reducer;
+export const { deleteCity, updateCity } = citiesSlice.actions;
+export const selectCoordCitiesSlice = (state: RootState) => state.cities;

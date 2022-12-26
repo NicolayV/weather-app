@@ -1,28 +1,24 @@
 import styled from "styled-components";
 import { ChevronUp, ChevronDown } from "@styled-icons/boxicons-regular";
 
-export interface OptionsProps {
+interface OptionsProps {
   readonly show: boolean;
 }
-export interface OptionProps {
+interface OptionProps {
   readonly selected: boolean;
 }
 
 export const ModeSwitcher = styled.div`
   width: 50px;
   padding: 5px;
-
   display: flex;
   align-items: center;
   gap: 5px;
-
   border: 0.5px solid #ececec;
   border-radius: 5px;
   outline: none;
   cursor: pointer;
-
   position: relative;
-
   &:focus {
     border-color: #d0d0d0;
   }
@@ -54,9 +50,7 @@ export const Options = styled.ul<OptionsProps>`
   background-color: "#ececeec";
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   z-index: 100;
-
   display: ${(props) => (props.show ? "block" : "none")};
-
   position: absolute;
   top: calc(100% + 5px);
   left: 0;
@@ -64,9 +58,7 @@ export const Options = styled.ul<OptionsProps>`
 export const Option = styled.li<OptionProps>`
   padding: 2px 5px;
   font-weight: 600;
-
   cursor: pointer;
-
   &:hover {
     background-color: #ececec;
   }

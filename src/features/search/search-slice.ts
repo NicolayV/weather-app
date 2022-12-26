@@ -1,48 +1,30 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
+import { CityNamesDataProps, Extra, loadCityNamesProps, Status } from "types";
 
-export const loadAutocompleteCity = createAsyncThunk<
+export const loadCityNames = createAsyncThunk<
   {
-    // data: Country[];
-    data: any;
+    data: CityNamesDataProps;
   },
   string,
-  //   { extra: Extra }
-  { extra: any }
->("@@search/autocomplete-city", (name, { extra: { client, api } }) => {
-  return client.get(api.autocompleteSearch(name));
+  { extra: Extra }
+>("@@search/load-city-names", (name, { extra: { client, api } }) => {
+  return client.get(api.getCityByName(name));
 });
 
-export type Status = "idle" | "rejected" | "loading" | "received";
-
-export interface AutocompleteCityProps {
-  id: number | null;
-  name: string;
-  coord: {
-    lat: number | null;
-    lon: number | null;
-  };
-  country: string;
-}
-
-interface AutocompleteCitiesProps {
+interface CitiesNamesProps {
   status: Status;
-  list: AutocompleteCityProps[];
+  list: loadCityNamesProps[];
   error: string | null;
 }
-interface SysProps {
-  sys: { country: string };
-}
 
-interface ListItemProps extends AutocompleteCityProps, SysProps {}
-
-const initialState: AutocompleteCitiesProps = {
+const initialState: CitiesNamesProps = {
   status: "idle",
   list: [],
   error: null,
 };
 
-const autocompleteCitiesSlice = createSlice({
+const searchCitiesNamesSlice = createSlice({
   name: "@@search",
   initialState,
   reducers: {
@@ -53,25 +35,25 @@ const autocompleteCitiesSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(loadAutocompleteCity.fulfilled, (state, action) => {
-        state.status = "received";
-        state.list = action.payload.data.list.map((item: ListItemProps) => ({
-          id: item.id,
-          name: item.name,
-          country: item.sys.country,
-          coord: { lat: item.coord.lat, lon: item.coord.lon },
+      .addCase(loadCityNames.fulfilled, (state, { payload }) => {
+        state.list = payload.data.list.map(({ id, name, sys, coord }) => ({
+          id,
+          name,
+          country: sys.country,
+          coord: { lat: coord.lat, lon: coord.lon },
         }));
+        state.status = "received";
       })
 
       .addMatcher(
-        (action) => action.type.endsWith("autocomplete-city/rejected"),
+        (action) => action.type.endsWith("/load-city-names/rejected"),
         (state) => {
           state.status = "rejected";
           state.error = "Cannot load data";
         }
       )
       .addMatcher(
-        (action) => action.type.endsWith("autocomplete-city/pending"),
+        (action) => action.type.endsWith("/load-city-names/pending"),
         (state) => {
           state.status = "loading";
           state.error = null;
@@ -80,6 +62,6 @@ const autocompleteCitiesSlice = createSlice({
   },
 });
 
-export const autocompleteCitiesSliceReducer = autocompleteCitiesSlice.reducer;
-export const { setStatus } = autocompleteCitiesSlice.actions;
-export const selectAutocompleteCities = (state: RootState) => state.search;
+export const searchCitiesNamesSliceReducer = searchCitiesNamesSlice.reducer;
+export const { setStatus } = searchCitiesNamesSlice.actions;
+export const selectCitiesNames = (state: RootState) => state.search;

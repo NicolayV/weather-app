@@ -1,14 +1,8 @@
 import { useTranslation } from "react-i18next";
+import { CardProps } from "types";
 import * as S from "./styled";
 
-export interface WeatherPanelProps {
-  wind: number | null;
-  humidity: number | null;
-  pressure: number | null;
-  temp: number | null;
-}
-
-export const WeatherPanel = (props: WeatherPanelProps) => {
+export const WeatherPanel = (props: CardProps) => {
   const { humidity, pressure, wind } = props;
   const { t } = useTranslation("translation");
 

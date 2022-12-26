@@ -1,55 +1,31 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
+import {
+  Extra,
+  LocalCityProps,
+  LocalCitySliceProps,
+  UpdateCityNotationProps,
+} from "types";
+
+export const loadLocalCityName = createAsyncThunk<
+  {
+    data: { city: string };
+  },
+  undefined,
+  { extra: Extra }
+>("@@local/load-city-name", (_, { extra: { client, api } }) => {
+  return client.get(api.getCityNameByLocation());
+});
 
 export const loadLocalCity = createAsyncThunk<
   {
-    // data: Country[];
-    data: any;
+    data: LocalCityProps;
   },
   string,
-  //   { extra: Extra }
-  { extra: any }
->("@@local-city/load-city", (name, { extra: { client, api } }) => {
+  { extra: Extra }
+>("@@local/load-city", (name, { extra: { client, api } }) => {
   return client.get(api.searchByCity(name));
 });
-export const loadCurrentLocation = createAsyncThunk<
-  {
-    // data: Country[];
-    data: any;
-  },
-  string,
-  //   { extra: Extra }
-  { extra: any }
->("@@local-city/location", (_, { extra: { client, api } }) => {
-  return client.get(api.searchLocation());
-});
-
-export type Status = "idle" | "rejected" | "loading" | "received";
-
-interface CityProps {
-  id: number | null;
-  name: string;
-  country: string;
-  dt_txt: string;
-  dt: number | null;
-  weather_icon: string | null;
-  weather_description: string;
-  temp: number | null;
-  temp_notation: "celsius" | "fahrenheit";
-  feels_like: number | null;
-  wind: number | null;
-  humidity: number | null;
-  pressure: number | null;
-  forecast: {
-    dt: number;
-    dt_txt: string;
-  }[];
-}
-interface LocalCitySliceProps extends CityProps {
-  status: Status;
-  current_location: string;
-  error: string | null;
-}
 
 const initialState: LocalCitySliceProps = {
   status: "idle",
@@ -57,7 +33,6 @@ const initialState: LocalCitySliceProps = {
   id: null,
   name: "",
   country: "",
-  dt_txt: "",
   dt: null,
   weather_icon: "",
   weather_description: "",
@@ -72,15 +47,14 @@ const initialState: LocalCitySliceProps = {
 };
 
 const localCitySlice = createSlice({
-  name: "@@local-city",
+  name: "@@local",
   initialState,
   reducers: {
-    deleteLocalCity: (state, action) => {
+    deleteLocalCity: (state) => {
       state.status = "rejected";
       state.id = null;
       state.name = "";
       state.country = "";
-      state.dt_txt = "";
       state.dt = null;
       state.weather_icon = null;
       state.weather_description = "";
@@ -94,34 +68,40 @@ const localCitySlice = createSlice({
       state.error = null;
     },
 
-    updateLocalCityNotation: (state, action) => {
+    updateLocalCityNotation: (
+      state,
+      action: PayloadAction<UpdateCityNotationProps>
+    ) => {
       state.temp_notation = action.payload.temp_notation;
     },
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(loadLocalCity.fulfilled, (state, action) => {
+      .addCase(loadLocalCity.fulfilled, (state, { payload: { data } }) => {
         state.status = "received";
-        state.id = action.payload.data.city.id;
-        state.name = action.payload.data.city.name;
-        state.country = action.payload.data.city.country;
-        state.dt_txt = action.payload.data.list[0].dt_txt;
-        state.dt = action.payload.data.list[0].dt;
-        state.weather_icon = action.payload.data.list[0].weather[0].icon;
-        state.weather_description = action.payload.data.list[0].weather[0].main;
-        state.temp = action.payload.data.list[0].main.temp;
-        state.feels_like = action.payload.data.list[0].main.feels_like;
-        state.wind = action.payload.data.list[0].wind.speed;
-        state.humidity = action.payload.data.list[0].main.humidity;
-        state.pressure = action.payload.data.list[0].main.pressure;
-        state.forecast = action.payload.data.list.map((item: any) => ({
-          dt: item.dt,
-          dt_txt: item.dt_txt,
-        }));
+        state.id = data.city.id;
+        state.name = data.city.name;
+        state.country = data.city.country;
+        state.dt = data.list[0].dt;
+
+        state.weather_icon = data.list[0].weather[0].icon;
+        state.weather_description = data.list[0].weather[0].main;
+        state.temp = data.list[0].main.temp;
+        state.feels_like = data.list[0].main.feels_like;
+        state.humidity = data.list[0].main.humidity;
+        state.pressure = data.list[0].main.pressure;
+        state.wind = data.list[0].wind.speed;
+
+        state.forecast = data.list
+          .map((item) => ({
+            dt: item.dt,
+            temp: item.main.temp,
+          }))
+          .slice(-9);
       })
-      .addCase(loadCurrentLocation.fulfilled, (state, action) => {
-        state.current_location = action.payload.data.city;
+      .addCase(loadLocalCityName.fulfilled, (state, { payload }) => {
+        state.current_location = payload.data.city;
       })
 
       .addMatcher(
@@ -145,4 +125,4 @@ export const localCityReducer = localCitySlice.reducer;
 export const { deleteLocalCity, updateLocalCityNotation } =
   localCitySlice.actions;
 
-export const selectLocalCity = (state: RootState) => state.localCity;
+export const selectLocalCity = (state: RootState) => state.location;

@@ -2,11 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
 import { Languages } from "types";
 
-interface LangSlice {
-  lang: Languages;
-}
-
-const initialState: LangSlice = {
+const initialState: { lang: Languages } = {
   lang: "EN",
 };
 
@@ -14,8 +10,8 @@ const languageSlice = createSlice({
   name: "@@selector",
   initialState,
   reducers: {
-    setLanguage: (state, action: PayloadAction<Languages>) => {
-      state.lang = action.payload;
+    setLanguage: (state, { payload }: PayloadAction<Languages>) => {
+      state.lang = payload;
     },
   },
 });

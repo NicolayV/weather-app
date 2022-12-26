@@ -1,5 +1,5 @@
 import React from "react";
-import { LangSwitcher } from "features/langSwitcher/LangSwitcher";
+import { LangSwitcher } from "features/switcher/LangSwitcher";
 import { SearchBar } from "features/search/Search";
 import { List } from "components/list";
 import { LocalCity } from "features/localCity/LocalCity";

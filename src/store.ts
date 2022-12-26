@@ -7,23 +7,23 @@ import * as api from "config";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import { languageReducer } from "features/langSwitcher/lang-slice";
+import { languageReducer } from "features/switcher/lang-slice";
 import { localCityReducer } from "features/localCity/localCity-slice";
-import { autocompleteCitiesSliceReducer } from "features/search/search-slice";
-import { coordCitiesSliceReducer } from "features/cities/cities-slice";
+import { searchCitiesNamesSliceReducer } from "features/search/search-slice";
+import { citiesSliceReducer } from "features/cities/cities-slice";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["selector", "search", "coord"],
+  whitelist: ["selector", "search", "cities"],
 };
 
 const rootReducer = combineReducers({
   selector: languageReducer,
-  search: autocompleteCitiesSliceReducer,
-  coord: coordCitiesSliceReducer,
+  search: searchCitiesNamesSliceReducer,
+  cities: citiesSliceReducer,
 
-  localCity: localCityReducer,
+  location: localCityReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
