@@ -62,7 +62,6 @@ export const Section = styled(Panel)`
   align-items: center;
 `;
 export const Temp = styled.span`
-  padding-top: 15px;
   font-size: 24px;
   font-weight: 600;
   display: flex;
