@@ -1,11 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import {
-  Extra,
-  LocalCityProps,
-  LocalCitySliceProps,
-  UpdateCityNotationProps,
-} from "types";
+import { Extra, UpdateCityNotationProps } from "types";
+import { LocalCitySliceProps, LocalCityProps } from "./types";
 
 export const loadLocalCityName = createAsyncThunk<
   {

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
-import { LocalCitySliceProps } from "types";
+import { LocalCitySliceProps } from "./types";
 import {
   deleteLocalCity,
   loadLocalCity,

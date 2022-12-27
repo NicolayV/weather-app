@@ -2,11 +2,18 @@ import { loadCity } from "features/cities/citiesSlice";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
-import { CurrentCityHandlerProps, loadCityNamesProps } from "types";
+import { LoadCityNamesProps } from "types";
 import { loadCityNames, selectCitiesNames, setStatus } from "./searchSlice";
 
+export interface CurrentCityHandlerProps {
+  lat: number | null;
+  lon: number | null;
+  name: string;
+  country: string;
+}
+
 interface UseSearchProps {
-  list: loadCityNamesProps[];
+  list: LoadCityNamesProps[];
   isOpen: boolean;
   inputFieldValue: (city: string) => void;
   currentCityHandler: ({

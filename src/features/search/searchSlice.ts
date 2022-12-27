@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import { CityNamesDataProps, Extra, loadCityNamesProps, Status } from "types";
+import { Extra, LoadCityNamesProps, Status } from "types";
+import { CityNamesDataProps } from "./types";
 
 export const loadCityNames = createAsyncThunk<
   {
@@ -14,7 +15,7 @@ export const loadCityNames = createAsyncThunk<
 
 interface CitiesNamesProps {
   status: Status;
-  list: loadCityNamesProps[];
+  list: LoadCityNamesProps[];
   error: string | null;
 }
 

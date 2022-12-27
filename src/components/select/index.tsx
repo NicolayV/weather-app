@@ -1,6 +1,12 @@
 import { useState } from "react";
-import { Languages, SelectProps } from "types";
+import { Languages } from "types";
 import * as S from "./styled";
+
+export type SelectProps = {
+  value: Languages;
+  options: Languages[];
+  onChange: (value: Languages) => void;
+};
 
 export const Select = (props: SelectProps) => {
   const { value, onChange, options } = props;

@@ -11,7 +11,6 @@ import {
 } from "chart.js";
 
 import { Line } from "react-chartjs-2";
-import { ChartLineProps } from "types";
 import styled from "styled-components";
 
 ChartJS.register(
@@ -23,6 +22,14 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+interface ChartLineProps {
+  temp: number | null;
+  forecast: {
+    dt: number;
+    temp: number;
+  }[];
+}
 
 export const ChartLine = (props: ChartLineProps) => {
   const chartData = props.forecast.map(

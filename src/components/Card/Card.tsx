@@ -1,5 +1,6 @@
+import { ReactNode } from "react";
 import styled from "styled-components";
-import { CardLoadingProps, CardProps } from "types";
+import { CardProps } from "types";
 import { CardFooter } from "./Footer";
 import { CardHeader } from "./Header";
 import { ChartLine } from "./Chart";
@@ -15,6 +16,10 @@ export const Card = (props: CardProps) => {
     </CardEl>
   );
 };
+
+export interface CardLoadingProps extends Pick<CardProps, "temp"> {
+  children: ReactNode;
+}
 
 export const CardLoading = (props: CardLoadingProps) => {
   return (

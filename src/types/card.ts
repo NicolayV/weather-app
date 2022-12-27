@@ -1,17 +1,3 @@
-import { ReactNode } from "react";
-
-export interface CurrentCityHandlerProps {
-  lat: number | null;
-  lon: number | null;
-  name: string;
-  country: string;
-}
-
-export interface CoordProps {
-  lat: number | null;
-  lon: number | null;
-}
-
 export interface CityProps {
   id: number | null;
   name: string;
@@ -38,16 +24,4 @@ export interface CardProps extends CityProps {
     notation: "celsius" | "fahrenheit",
     id: number | null
   ) => void;
-}
-
-export interface ChartLineProps {
-  temp: number | null;
-  forecast: {
-    dt: number;
-    temp: number;
-  }[];
-}
-
-export interface CardLoadingProps extends Pick<CardProps, "temp"> {
-  children: ReactNode;
 }

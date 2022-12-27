@@ -1,6 +1,22 @@
 import { useState } from "react";
-import { onChange, onSubmit, SearchFieldProps } from "../../types/search";
 import * as S from "./styled";
+
+import { ChangeEventHandler, FormEventHandler } from "react";
+import { LoadCityNamesProps } from "types";
+
+export interface SearchFieldProps {
+  fieldValue: (text: string) => void;
+  currentCityHandler: (value: {
+    lat: number | null;
+    lon: number | null;
+    name: string;
+    country: string;
+  }) => void;
+  isOpen: boolean;
+  options: LoadCityNamesProps[];
+}
+export type onChange = ChangeEventHandler<HTMLInputElement>;
+export type onSubmit = FormEventHandler<HTMLFormElement>;
 
 export const SearchField = (props: SearchFieldProps) => {
   const { fieldValue, isOpen, options, currentCityHandler } = props;
