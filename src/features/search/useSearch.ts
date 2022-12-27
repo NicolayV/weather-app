@@ -1,25 +1,23 @@
-import { loadCity } from "features/cities/cities-slice";
+import { loadCity } from "features/cities/citiesSlice";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
 import { CurrentCityHandlerProps, loadCityNamesProps } from "types";
-import { loadCityNames, selectCitiesNames, setStatus } from "./search-slice";
+import { loadCityNames, selectCitiesNames, setStatus } from "./searchSlice";
 
 interface UseSearchProps {
-  (): {
-    list: loadCityNamesProps[];
-    isOpen: boolean;
-    inputFieldValue: (city: string) => void;
-    currentCityHandler: ({
-      lat,
-      lon,
-      name,
-      country,
-    }: CurrentCityHandlerProps) => void;
-  };
+  list: loadCityNamesProps[];
+  isOpen: boolean;
+  inputFieldValue: (city: string) => void;
+  currentCityHandler: ({
+    lat,
+    lon,
+    name,
+    country,
+  }: CurrentCityHandlerProps) => void;
 }
 
-const useSearch: UseSearchProps = () => {
+const useSearch = (): UseSearchProps => {
   const dispatch = useAppDispatch();
   const { list, status } = useSelector(selectCitiesNames);
 

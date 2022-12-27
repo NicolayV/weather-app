@@ -7,10 +7,10 @@ import * as api from "config";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import { languageReducer } from "features/switcher/lang-slice";
-import { localCityReducer } from "features/localCity/localCity-slice";
-import { searchCitiesNamesSliceReducer } from "features/search/search-slice";
-import { citiesSliceReducer } from "features/cities/cities-slice";
+import { languageReducer } from "features/switcher/langSlice";
+import { localCityReducer } from "features/localCity/localCitySlice";
+import { searchCitiesNamesSliceReducer } from "features/search/searchSlice";
+import { citiesSliceReducer } from "features/cities/citiesSlice";
 
 const persistConfig = {
   key: "root",

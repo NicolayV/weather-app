@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Card, CardLoading } from "components/card";
-import { useLocal } from "./use-local";
+import { Card, CardLoading } from "components/Card/Card";
+import { useLocal } from "./useLocal";
 
 export const LocalCity = () => {
   const { localCity, updateCityNotationHandler, deleteHandler } = useLocal();

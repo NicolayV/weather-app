@@ -1,7 +1,7 @@
 import React from "react";
 import { LangSwitcher } from "features/switcher/LangSwitcher";
 import { SearchBar } from "features/search/Search";
-import { List } from "components/list";
+import { List } from "components/List";
 import { LocalCity } from "features/localCity/LocalCity";
 import { Cities } from "./features/cities/Cities";
 

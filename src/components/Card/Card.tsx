@@ -1,4 +1,28 @@
 import styled from "styled-components";
+import { CardLoadingProps, CardProps } from "types";
+import { CardFooter } from "./Footer";
+import { CardHeader } from "./Header";
+import { ChartLine } from "./Chart";
+
+export const Card = (props: CardProps) => {
+  return (
+    <CardEl main={props.temp ? Math.sign(props.temp) : -1}>
+      <CardHeader {...props} />
+      <Chart>
+        <ChartLine {...props} />
+      </Chart>
+      <CardFooter {...props} />
+    </CardEl>
+  );
+};
+
+export const CardLoading = (props: CardLoadingProps) => {
+  return (
+    <CardEl main={props.temp ? Math.sign(props.temp) : -1}>
+      <Loading>{props.children}</Loading>
+    </CardEl>
+  );
+};
 
 export interface CardElProps {
   readonly main: number;
@@ -6,7 +30,6 @@ export interface CardElProps {
 export const CardEl = styled.div<CardElProps>`
   padding: 5px;
   width: 300px;
-  height: 250px;
   background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};
   display: flex;
   flex-direction: column;

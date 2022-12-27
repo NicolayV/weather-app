@@ -1,6 +1,6 @@
 import { CityProps } from "types";
-import { Card } from "../../components/card";
-import { useCities } from "./use-cities";
+import { Card } from "../../components/Card/Card";
+import { useCities } from "./useCities";
 
 export const Cities = () => {
   const { list, deleteHandler, updateCityNotationHandler } = useCities();

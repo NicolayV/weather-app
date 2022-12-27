@@ -1,7 +1,7 @@
 import * as S from "./styled";
 
-import { Select } from "components/select/";
-import { useLang } from "./use-lang";
+import { Select } from "components/Select";
+import { useLang } from "./useLang";
 
 export const LangSwitcher = () => {
   const { options, value, onChange } = useLang();

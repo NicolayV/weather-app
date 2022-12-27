@@ -1,5 +1,47 @@
+import { CardProps } from "types";
 import styled from "styled-components";
 import { Close } from "@styled-icons/ionicons-solid";
+
+export const CardHeader = (props: CardProps) => {
+  const {
+    id,
+    name,
+    country,
+    dt,
+    weather_icon,
+    weather_description,
+    deleteHandler,
+  } = props;
+
+  const date = new Date(dt ? dt * 1000 : 0)
+    .toUTCString()
+    .slice(0, -7)
+    .split(" ")
+    .filter((word) => word !== "2022")
+    .join(" ");
+
+  return (
+    <Header>
+      <CloseButton onClick={() => deleteHandler(id)}>
+        <SvgClose />
+      </CloseButton>
+
+      <TitlePanel>
+        <Title>
+          {name}, {country}
+        </Title>
+        <SubTitle>{date}</SubTitle>
+      </TitlePanel>
+
+      <WeatherIconBar>
+        <WeatherIcon
+          src={`https://openweathermap.org/img/wn/${weather_icon}@4x.png`}
+        />
+        <WeatherType>{weather_description}</WeatherType>
+      </WeatherIconBar>
+    </Header>
+  );
+};
 
 export const Header = styled.div`
   display: flex;
@@ -13,6 +55,7 @@ export const TitlePanel = styled.div`
   gap: 10px;
   background-color: transparent;
 `;
+
 export const Title = styled.div`
   font-size: 18px;
   font-weight: 600;
@@ -27,7 +70,6 @@ export const WeatherIconBar = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
-
   background-color: transparent;
 `;
 export const WeatherIcon = styled.img.attrs({

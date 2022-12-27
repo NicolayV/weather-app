@@ -63,14 +63,11 @@ export const ChartLine = (props: ChartLineProps) => {
 export interface ContProps {
   readonly main: number;
 }
-
 const Cont = styled.div<ContProps>`
   width: 280px;
   height: 100px;
-
   display: flex;
   background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};
-
   justify-content: center;
   & * {
     background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};

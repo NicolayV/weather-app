@@ -8,20 +8,18 @@ import {
   loadLocalCityName,
   selectLocalCity,
   updateLocalCityNotation,
-} from "./localCity-slice";
+} from "./localCitySlice";
 
 interface LocalProps {
-  (): {
-    localCity: LocalCitySliceProps;
-    deleteHandler: () => void;
-    updateCityNotationHandler: (
-      notation: "celsius" | "fahrenheit",
-      id: number | null
-    ) => void;
-  };
+  localCity: LocalCitySliceProps;
+  deleteHandler: () => void;
+  updateCityNotationHandler: (
+    notation: "celsius" | "fahrenheit",
+    id: number | null
+  ) => void;
 }
 
-const useLocal: LocalProps = () => {
+const useLocal = (): LocalProps => {
   const dispatch = useAppDispatch();
   const localCity = useSelector(selectLocalCity);
 
