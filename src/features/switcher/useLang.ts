@@ -2,14 +2,9 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "store";
-import { Languages } from "types";
 import { selectLanguage, setLanguage } from "./langSlice";
-
-interface UseLangProps {
-  value: Languages;
-  onChange: (value: Languages) => void;
-  options: Languages[];
-}
+import { UseLangProps } from "./types";
+import { Languages } from "types";
 
 const useLang = (): UseLangProps => {
   const dispatch = useAppDispatch();
