@@ -18,6 +18,7 @@ export const Container = styled.div`
   width: 100%;
   max-width: 1240px;
   margin: 0 auto;
+  padding-bottom: 20px;
 `;
 export const Wrapper = styled.div`
   display: grid;

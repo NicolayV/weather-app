@@ -1,25 +1,19 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import { Extra, LoadCityNamesProps, Status } from "types";
-import { CityNamesDataProps } from "./types";
+import { Extra, Status } from "types";
+import { FetchCitiesNames, SearchSlice } from "./types";
 
-export const loadCityNames = createAsyncThunk<
+export const loadCitiesNames = createAsyncThunk<
   {
-    data: CityNamesDataProps;
+    data: FetchCitiesNames;
   },
   string,
   { extra: Extra }
->("@@search/load-city-names", (name, { extra: { client, api } }) => {
-  return client.get(api.getCityByName(name));
+>("@@search/load-cities-names", (name, { extra: { client, api } }) => {
+  return client.get(api.getCitiesNames(name));
 });
 
-interface CitiesNamesProps {
-  status: Status;
-  list: LoadCityNamesProps[];
-  error: string | null;
-}
-
-const initialState: CitiesNamesProps = {
+const initialState: SearchSlice = {
   status: "idle",
   list: [],
   error: null,
@@ -36,7 +30,7 @@ const searchCitiesNamesSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(loadCityNames.fulfilled, (state, { payload }) => {
+      .addCase(loadCitiesNames.fulfilled, (state, { payload }) => {
         state.list = payload.data.list.map(({ id, name, sys, coord }) => ({
           id,
           name,
@@ -47,14 +41,14 @@ const searchCitiesNamesSlice = createSlice({
       })
 
       .addMatcher(
-        (action) => action.type.endsWith("/load-city-names/rejected"),
+        (action) => action.type.endsWith("/load-cities-names/rejected"),
         (state) => {
           state.status = "rejected";
           state.error = "Cannot load data";
         }
       )
       .addMatcher(
-        (action) => action.type.endsWith("/load-city-names/pending"),
+        (action) => action.type.endsWith("/load-cities-names/pending"),
         (state) => {
           state.status = "loading";
           state.error = null;

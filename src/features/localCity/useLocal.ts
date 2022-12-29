@@ -1,54 +1,63 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
-import { LocalCitySliceProps } from "./types";
+
 import {
   deleteLocalCity,
-  loadLocalCity,
-  loadLocalCityName,
+  loadLocalCityByCoord,
+  loadLocalCityNameByCoord,
+  loadLocalCityNameByIp,
   selectLocalCity,
   updateLocalCityNotation,
 } from "./localCitySlice";
+import { ShowPosition, UseLocalProps } from "./types";
 
-interface LocalProps {
-  localCity: LocalCitySliceProps;
-  deleteHandler: () => void;
-  updateCityNotationHandler: (
-    notation: "celsius" | "fahrenheit",
-    id: number | null
-  ) => void;
-}
-
-const useLocal = (): LocalProps => {
+const useLocal = (): UseLocalProps => {
   const dispatch = useAppDispatch();
   const localCity = useSelector(selectLocalCity);
 
   useEffect(() => {
-    if (!localCity.current_location) {
-      dispatch(loadLocalCityName());
+    function getLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, errorHandler);
+        console.log("nav");
+      }
     }
-  }, [dispatch, localCity.current_location]);
+
+    function showPosition(position: ShowPosition) {
+      dispatch(
+        loadLocalCityNameByCoord({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        })
+      );
+    }
+
+    function errorHandler() {
+      dispatch(loadLocalCityNameByIp());
+    }
+    if (localCity.status === "idle") {
+      getLocation();
+    }
+  }, [dispatch, localCity.status]);
 
   useEffect(() => {
-    if (localCity.current_location && localCity.status === "idle") {
-      dispatch(loadLocalCity(localCity.current_location));
+    if (
+      localCity.status === "received-name-by-nav" ||
+      localCity.status === "received-name-by-ip"
+    ) {
+      dispatch(
+        loadLocalCityByCoord({ lat: localCity.lat, lon: localCity.lon })
+      );
     }
-  }, [dispatch, localCity.current_location, localCity.status]);
+  }, [dispatch, localCity.lat, localCity.lon, localCity.status]);
 
   const deleteHandler = () => {
     dispatch(deleteLocalCity());
   };
 
-  const updateCityNotationHandler = (
-    notation: "celsius" | "fahrenheit",
-    id: number | null
-  ) => {
-    dispatch(
-      updateLocalCityNotation({
-        temp_notation: notation,
-        id,
-      })
-    );
+  const updateCityNotationHandler = (id: number | null) => {
+    dispatch(updateLocalCityNotation(id));
   };
 
   return { localCity, updateCityNotationHandler, deleteHandler };

@@ -1,34 +1,50 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import { Extra, UpdateCityNotationProps } from "types";
-import { LocalCitySliceProps, LocalCityProps } from "./types";
+import {
+  CityCoord,
+  Extra,
+  FetchCityByCoord,
+  FetchCityNameByCoord,
+} from "types";
+import { CitySlice, FetchCityNameByIp } from "./types";
 
-export const loadLocalCityName = createAsyncThunk<
+export const loadLocalCityNameByIp = createAsyncThunk<
   {
-    data: { city: string };
+    data: FetchCityNameByIp;
   },
   undefined,
   { extra: Extra }
->("@@local/load-city-name", (_, { extra: { client, api } }) => {
-  return client.get(api.getCityNameByLocation());
+>("@@loc-city/get-name-by-ip", (_, { extra: { client, api } }) => {
+  return client.get(api.getLocalCityNameByIp());
 });
 
-export const loadLocalCity = createAsyncThunk<
+export const loadLocalCityByCoord = createAsyncThunk<
   {
-    data: LocalCityProps;
+    data: FetchCityByCoord;
   },
-  string,
+  CityCoord,
   { extra: Extra }
->("@@local/load-city", (name, { extra: { client, api } }) => {
-  return client.get(api.searchByCity(name));
+>("@@loc-city/get-city-by-coord", (coord, { extra: { client, api } }) => {
+  return client.get(api.getCityByCoord(coord));
 });
 
-const initialState: LocalCitySliceProps = {
+export const loadLocalCityNameByCoord = createAsyncThunk<
+  {
+    data: FetchCityNameByCoord;
+  },
+  CityCoord,
+  { extra: Extra }
+>("@@loc-city/get-city-name-by-coord", (coord, { extra: { client, api } }) => {
+  return client.get(api.getCityByCoord(coord));
+});
+
+const initialState: CitySlice = {
   status: "idle",
-  current_location: "",
   id: null,
   name: "",
   country: "",
+  lat: null,
+  lon: null,
   dt: null,
   weather_icon: "",
   weather_description: "",
@@ -43,75 +59,74 @@ const initialState: LocalCitySliceProps = {
 };
 
 const localCitySlice = createSlice({
-  name: "@@local",
+  name: "@@loc-city",
   initialState,
   reducers: {
-    deleteLocalCity: (state) => {
-      state.status = "rejected";
-      state.id = null;
-      state.name = "";
-      state.country = "";
-      state.dt = null;
-      state.weather_icon = null;
-      state.weather_description = "";
-      state.temp = null;
-      state.temp_notation = "celsius";
-      state.feels_like = null;
-      state.wind = null;
-      state.humidity = null;
-      state.pressure = null;
-      state.forecast = [];
-      state.error = null;
-    },
+    deleteLocalCity: (_, action: PayloadAction<undefined>) => ({
+      ...initialState,
+      status: "canceled",
+    }),
 
     updateLocalCityNotation: (
       state,
-      action: PayloadAction<UpdateCityNotationProps>
+      { payload }: PayloadAction<number | null>
     ) => {
-      state.temp_notation = action.payload.temp_notation;
+      if (state.id === payload) {
+        state.temp_notation =
+          state.temp_notation === "fahrenheit" ? "celsius" : "fahrenheit";
+      }
     },
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(loadLocalCity.fulfilled, (state, { payload: { data } }) => {
-        state.status = "received";
-        state.id = data.city.id;
-        state.name = data.city.name;
-        state.country = data.city.country;
-        state.dt = data.list[0].dt;
-
-        state.weather_icon = data.list[0].weather[0].icon;
-        state.weather_description = data.list[0].weather[0].main;
-        state.temp = data.list[0].main.temp;
-        state.feels_like = data.list[0].main.feels_like;
-        state.humidity = data.list[0].main.humidity;
-        state.pressure = data.list[0].main.pressure;
-        state.wind = data.list[0].wind.speed;
-
-        state.forecast = data.list
-          .map((item) => ({
-            dt: item.dt,
-            temp: item.main.temp,
-          }))
-          .slice(-9);
-      })
-      .addCase(loadLocalCityName.fulfilled, (state, { payload }) => {
-        state.current_location = payload.data.city;
-      })
-
-      .addMatcher(
-        (action) => action.type.endsWith("/rejected"),
-        (state) => {
-          state.status = "rejected";
-          state.error = "Cannot load data";
+      .addCase(
+        loadLocalCityNameByIp.fulfilled,
+        (state, { payload: { data } }) => {
+          state.name = data.city;
+          state.country = data.city;
+          state.lat = data.latitude;
+          state.lon = data.longitude;
+          state.status = "received-name-by-ip";
         }
       )
-      .addMatcher(
-        (action) => action.type.endsWith("city/pending"),
-        (state) => {
-          state.status = "loading";
-          state.error = null;
+      .addCase(
+        loadLocalCityByCoord.fulfilled,
+        (
+          state,
+          {
+            payload: {
+              data: { current, daily },
+            },
+          }
+        ) => {
+          state.id = current.dt;
+          state.dt = current.dt;
+          state.weather_icon = current.weather[0].icon;
+          state.weather_description = current.weather[0].main;
+          state.temp = current.temp;
+          state.temp = current.temp;
+          state.temp_notation = "celsius";
+          state.feels_like = current.feels_like;
+          state.humidity = current.humidity;
+          state.pressure = current.pressure;
+          state.forecast = daily.map((day) => ({
+            dt: day.dt,
+            temp: day.temp.day,
+          }));
+
+          state.status = "received";
+        }
+      )
+
+      .addCase(
+        loadLocalCityNameByCoord.fulfilled,
+        (state, { payload: { data } }) => {
+          state.name = data.city.name;
+          state.country = data.city.country;
+          state.lat = data.city.coord.lat;
+          state.lon = data.city.coord.lon;
+          state.status = "received-name-by-nav";
         }
       );
   },
@@ -121,4 +136,4 @@ export const localCityReducer = localCitySlice.reducer;
 export const { deleteLocalCity, updateLocalCityNotation } =
   localCitySlice.actions;
 
-export const selectLocalCity = (state: RootState) => state.location;
+export const selectLocalCity = (state: RootState) => state.locCity;

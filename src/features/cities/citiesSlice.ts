@@ -1,19 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import {
-  CityProps,
-  Extra,
-  LoadCityProps,
-  Status,
-  UpdateCityNotationProps,
-} from "types";
-import { CityDataProps } from "./types";
+import { City, CityCoord, Extra, FetchCityByCoord } from "types";
+import { CitiesSlice, LoadCity } from "./types";
 
 export const loadCity = createAsyncThunk<
   {
-    data: CityDataProps;
+    data: FetchCityByCoord & CityCoord;
   },
-  LoadCityProps,
+  LoadCity,
   { extra: Extra }
 >(
   "@@cities/load-city",
@@ -21,13 +15,7 @@ export const loadCity = createAsyncThunk<
   (coord, { extra: { client, api } }) => client.get(api.getCityByCoord(coord))
 );
 
-interface CoordCitiesProps {
-  status: Status;
-  list: CityProps[];
-  error: string | null;
-}
-
-const initialState: CoordCitiesProps = {
+const initialState: CitiesSlice = {
   status: "idle",
   list: [],
   error: null,
@@ -41,13 +29,11 @@ const citiesSlice = createSlice({
       state.list = state.list.filter((city) => city.id !== payload);
     },
 
-    updateCity: (
-      state,
-      { payload }: PayloadAction<UpdateCityNotationProps>
-    ) => {
-      const city = state.list.find(({ id }) => id === payload.id);
+    updateCity: (state, { payload }: PayloadAction<number | null>) => {
+      const city = state.list.find(({ id }) => id === payload);
       if (city) {
-        city.temp_notation = payload.temp_notation;
+        city.temp_notation =
+          city.temp_notation === "fahrenheit" ? "celsius" : "fahrenheit";
       }
     },
   },
@@ -55,10 +41,12 @@ const citiesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loadCity.fulfilled, (state, { payload: { data }, meta }) => {
-        const currentCity: CityProps = {
+        const currentCity: City = {
           id: data.current.dt,
           name: meta.arg.name,
           country: meta.arg.country,
+          lat: data.lat,
+          lon: data.lon,
           dt: data.current.dt,
           weather_icon: data.current.weather[0].icon,
           weather_description: data.current.weather[0].main,
@@ -66,14 +54,12 @@ const citiesSlice = createSlice({
           temp_notation: "celsius",
           feels_like: data.current.feels_like,
           wind: data.current.wind_speed,
-          pressure: data.current.pressure,
           humidity: data.current.humidity,
-          forecast: data.daily.map(
-            (day: { dt: number; temp: { day: number } }) => ({
-              dt: day.dt,
-              temp: day.temp.day,
-            })
-          ),
+          pressure: data.current.pressure,
+          forecast: data.daily.map((day) => ({
+            dt: day.dt,
+            temp: day.temp.day,
+          })),
         };
 
         state.list = [{ ...currentCity }, ...state.list];

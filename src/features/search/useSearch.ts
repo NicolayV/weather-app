@@ -2,29 +2,18 @@ import { loadCity } from "features/cities/citiesSlice";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
-import { LoadCityNamesProps } from "types";
-import { loadCityNames, selectCitiesNames, setStatus } from "./searchSlice";
+import { City } from "types";
+import { loadCitiesNames, selectCitiesNames, setStatus } from "./searchSlice";
+import { UseSearch } from "./types";
 
-export interface CurrentCityHandlerProps {
-  lat: number | null;
-  lon: number | null;
-  name: string;
-  country: string;
-}
+// export interface CurrentCityHandlerProps {
+//   lat: number | null;
+//   lon: number | null;
+//   name: string;
+//   country: string;
+// }
 
-interface UseSearchProps {
-  list: LoadCityNamesProps[];
-  isOpen: boolean;
-  inputFieldValue: (city: string) => void;
-  currentCityHandler: ({
-    lat,
-    lon,
-    name,
-    country,
-  }: CurrentCityHandlerProps) => void;
-}
-
-const useSearch = (): UseSearchProps => {
+const useSearch = (): UseSearch => {
   const dispatch = useAppDispatch();
   const { list, status } = useSelector(selectCitiesNames);
 
@@ -34,7 +23,7 @@ const useSearch = (): UseSearchProps => {
   }, [status]);
 
   const inputFieldValue = (city: string) => {
-    dispatch(loadCityNames(city));
+    dispatch(loadCitiesNames(city));
   };
 
   const currentCityHandler = ({
@@ -42,15 +31,12 @@ const useSearch = (): UseSearchProps => {
     lon,
     name,
     country,
-  }: CurrentCityHandlerProps) => {
-    if (typeof lat === "number" && typeof lon === "number") {
-      const strLat = lat.toString();
-      const strLon = lon.toString();
-      dispatch(loadCity({ name, country, strLat, strLon }));
-      dispatch(setStatus("idle"));
-    }
+  }: Pick<City, "name" | "country" | "lat" | "lon">) => {
+    dispatch(loadCity({ name, country, lat, lon }));
+    dispatch(setStatus("idle"));
   };
 
   return { list, isOpen, inputFieldValue, currentCityHandler };
 };
+
 export { useSearch };

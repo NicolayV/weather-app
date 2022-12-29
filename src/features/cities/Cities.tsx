@@ -1,4 +1,4 @@
-import { CityProps } from "types";
+import { City } from "types";
 import { Card } from "../../components/Card/Card";
 import { useCities } from "./useCities";
 
@@ -7,7 +7,7 @@ export const Cities = () => {
 
   return (
     <>
-      {list.map((props: CityProps) => {
+      {list.map((props: City) => {
         return (
           <Card
             deleteHandler={deleteHandler}

@@ -2,7 +2,7 @@ import { useState } from "react";
 import * as S from "./styled";
 
 import { ChangeEventHandler, FormEventHandler } from "react";
-import { LoadCityNamesProps } from "types";
+import { LoadCityNames } from "types";
 
 export interface SearchFieldProps {
   fieldValue: (text: string) => void;
@@ -13,7 +13,7 @@ export interface SearchFieldProps {
     country: string;
   }) => void;
   isOpen: boolean;
-  options: LoadCityNamesProps[];
+  options: LoadCityNames[];
 }
 export type onChange = ChangeEventHandler<HTMLInputElement>;
 export type onSubmit = FormEventHandler<HTMLFormElement>;

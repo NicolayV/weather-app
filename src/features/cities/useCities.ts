@@ -1,15 +1,12 @@
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
-import { CityProps } from "types";
+import { City } from "types";
 import { deleteCity, selectCoordCitiesSlice, updateCity } from "./citiesSlice";
 
 interface UseCitiesProps {
-  list: CityProps[];
+  list: City[];
   deleteHandler: (id: number | null) => void;
-  updateCityNotationHandler: (
-    notation: "celsius" | "fahrenheit",
-    id: number | null
-  ) => void;
+  updateCityNotationHandler: (id: number | null) => void;
 }
 
 const useCities = (): UseCitiesProps => {
@@ -20,16 +17,8 @@ const useCities = (): UseCitiesProps => {
     dispatch(deleteCity(id));
   };
 
-  const updateCityNotationHandler = (
-    notation: "celsius" | "fahrenheit",
-    id: number | null
-  ) => {
-    dispatch(
-      updateCity({
-        temp_notation: notation,
-        id,
-      })
-    );
+  const updateCityNotationHandler = (id: number | null) => {
+    dispatch(updateCity(id));
   };
 
   return { list, deleteHandler, updateCityNotationHandler };

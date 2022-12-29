@@ -26,14 +26,14 @@ export const TempPanel = (props: CardProps) => {
         <TempSwitcher>
           <TempOption
             tempSelected={temp_notation === "celsius" ? true : false}
-            onClick={() => updateCityNotationHandler("celsius", id)}
+            onClick={() => updateCityNotationHandler(id)}
           >
             &deg;C
           </TempOption>
           <Divider />
           <TempOption
             tempSelected={temp_notation === "fahrenheit" ? true : false}
-            onClick={() => updateCityNotationHandler("fahrenheit", id)}
+            onClick={() => updateCityNotationHandler(id)}
           >
             &deg;F
           </TempOption>
