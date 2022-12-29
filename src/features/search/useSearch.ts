@@ -6,13 +6,6 @@ import { City } from "types";
 import { loadCitiesNames, selectCitiesNames, setStatus } from "./searchSlice";
 import { UseSearch } from "./types";
 
-// export interface CurrentCityHandlerProps {
-//   lat: number | null;
-//   lon: number | null;
-//   name: string;
-//   country: string;
-// }
-
 const useSearch = (): UseSearch => {
   const dispatch = useAppDispatch();
   const { list, status } = useSelector(selectCitiesNames);

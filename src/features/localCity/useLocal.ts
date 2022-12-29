@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
 
@@ -15,30 +15,35 @@ import { ShowPosition, UseLocalProps } from "./types";
 const useLocal = (): UseLocalProps => {
   const dispatch = useAppDispatch();
   const localCity = useSelector(selectLocalCity);
-  useEffect(() => {
-    function getLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition, errorHandler);
-      }
-    }
 
-    function showPosition(position: ShowPosition) {
+  const showPosition = useCallback(
+    (position: ShowPosition) => {
       dispatch(
         loadLocalCityNameByCoord({
           lat: position.coords.latitude,
           lon: position.coords.longitude,
         })
       );
-    }
+    },
+    [dispatch]
+  );
 
-    function errorHandler() {
-      dispatch(loadLocalCityNameByIp());
-    }
+  const errorHandler = useCallback(() => {
+    dispatch(loadLocalCityNameByIp());
+  }, [dispatch]);
 
+  const getLocation = useCallback(() => {
+    console.log("getLocation render");
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, errorHandler);
+    }
+  }, [errorHandler, showPosition]);
+
+  useEffect(() => {
     if (localCity.status === "idle") {
       getLocation();
     }
-  }, [dispatch, localCity.status]);
+  }, [dispatch, getLocation, localCity.status]);
 
   useEffect(() => {
     if (
@@ -59,7 +64,6 @@ const useLocal = (): UseLocalProps => {
     dispatch(updateLocalCityNotation(id));
   };
 
-  console.log(localCity);
   return { localCity, updateCityNotationHandler, deleteHandler };
 };
 export { useLocal };

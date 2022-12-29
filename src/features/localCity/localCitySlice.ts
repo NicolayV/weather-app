@@ -71,7 +71,7 @@ const localCitySlice = createSlice({
       state,
       { payload }: PayloadAction<number | null>
     ) => {
-      if (state.id === payload) {
+      if (typeof payload === "number") {
         state.temp_notation =
           state.temp_notation === "fahrenheit" ? "celsius" : "fahrenheit";
       }
