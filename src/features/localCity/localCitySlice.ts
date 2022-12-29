@@ -35,7 +35,7 @@ export const loadLocalCityNameByCoord = createAsyncThunk<
   CityCoord,
   { extra: Extra }
 >("@@loc-city/get-city-name-by-coord", (coord, { extra: { client, api } }) => {
-  return client.get(api.getCityByCoord(coord));
+  return client.get(api.getLocalCityNameByCoord(coord));
 });
 
 const initialState: CitySlice = {

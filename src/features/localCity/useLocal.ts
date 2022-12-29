@@ -15,12 +15,10 @@ import { ShowPosition, UseLocalProps } from "./types";
 const useLocal = (): UseLocalProps => {
   const dispatch = useAppDispatch();
   const localCity = useSelector(selectLocalCity);
-
   useEffect(() => {
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, errorHandler);
-        console.log("nav");
       }
     }
 
@@ -36,6 +34,7 @@ const useLocal = (): UseLocalProps => {
     function errorHandler() {
       dispatch(loadLocalCityNameByIp());
     }
+
     if (localCity.status === "idle") {
       getLocation();
     }
@@ -60,6 +59,7 @@ const useLocal = (): UseLocalProps => {
     dispatch(updateLocalCityNotation(id));
   };
 
+  console.log(localCity);
   return { localCity, updateCityNotationHandler, deleteHandler };
 };
 export { useLocal };
