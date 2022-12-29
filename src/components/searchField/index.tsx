@@ -33,7 +33,6 @@ export const SearchField = (props: SearchFieldProps) => {
 
   const onChangeHandler: onChange = (e) => {
     setValue(e.target.value);
-    console.log(e.target.value);
   };
 
   return (
