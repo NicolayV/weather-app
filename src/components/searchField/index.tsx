@@ -3,6 +3,7 @@ import * as S from "./styled";
 
 import { ChangeEventHandler, FormEventHandler } from "react";
 import { LoadCityNames } from "types";
+import styled from "styled-components";
 
 export interface SearchFieldProps {
   fieldValue: (text: string) => void;
@@ -40,16 +41,28 @@ export const SearchField = (props: SearchFieldProps) => {
       <S.Button>Add</S.Button>
       <S.SearchList show={isOpen}>
         {options.length ? (
-          options.map(({ id, name, country, coord: { lat, lon } }) => {
-            return (
-              <S.SearchItem
-                onClick={() => currentCityHandler({ lat, lon, name, country })}
-                key={id}
-              >
-                {`${name}, ${country}`}
-              </S.SearchItem>
-            );
-          })
+          options.map(
+            ({ id, name, country, coord: { lat, lon }, weather_icon }) => {
+              return (
+                <S.SearchItem
+                  onClick={() =>
+                    currentCityHandler({ lat, lon, name, country })
+                  }
+                  key={id}
+                >
+                  <span>
+                    {name}, {country}
+                  </span>
+                  <span>
+                    lat: {lat} lat: {lon}
+                  </span>
+                  <WeatherIcon
+                    src={`https://openweathermap.org/img/wn/${weather_icon}@4x.png`}
+                  />
+                </S.SearchItem>
+              );
+            }
+          )
         ) : (
           <S.SearchItem>
             Not found. To make search more precise put the city's name
@@ -59,3 +72,10 @@ export const SearchField = (props: SearchFieldProps) => {
     </S.Form>
   );
 };
+
+export const WeatherIcon = styled.img.attrs({
+  alt: "weather icon",
+})`
+  width: 24px;
+  background-color: transparent;
+`;

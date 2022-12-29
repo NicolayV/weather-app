@@ -42,6 +42,7 @@ export interface LoadCityNames {
   name: string;
   country: string;
   coord: CityCoord;
+  weather_icon: string;
 }
 
 export interface FetchCityNameByCoord {

@@ -11,6 +11,11 @@ export interface FetchCitiesNames {
     sys: {
       country: string;
     };
+    weather: [
+      {
+        icon: string;
+      }
+    ];
   }[];
 }
 

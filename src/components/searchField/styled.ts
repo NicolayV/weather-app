@@ -91,9 +91,25 @@ export const SearchList = styled.ul<SearchListProps>`
   }
 `;
 export const SearchItem = styled.li`
+  display: flex;
+  gap: 5px;
   padding: 5px 10px;
   cursor: pointer;
+
+  & * {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+  }
+
   &:hover {
     background-color: #ececec;
+  }
+
+  & :first-child {
+    flex-grow: 1;
+  }
+  & :nth-child(2) {
+    color: #66d3fa;
   }
 `;

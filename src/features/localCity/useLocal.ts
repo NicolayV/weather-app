@@ -33,7 +33,6 @@ const useLocal = (): UseLocalProps => {
   }, [dispatch]);
 
   const getLocation = useCallback(() => {
-    console.log("getLocation render");
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition, errorHandler);
     }

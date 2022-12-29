@@ -14,31 +14,31 @@ export const ModeSwitcher = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
-  border: 0.5px solid #ececec;
+  border: 1px solid #b4b4b4;
   border-radius: 5px;
   outline: none;
   cursor: pointer;
   position: relative;
   &:focus {
-    border-color: #d0d0d0;
+    border-color: #3c99dc;
   }
 `;
 export const Value = styled.span`
   flex-grow: 1;
-  color: #d0d0d0;
+  color: #b4b4b4;
   font-weight: 600;
   line-height: 1.5;
 `;
 export const Divider = styled.div`
-  background-color: #ececec;
+  background-color: #b4b4b4;
   align-self: stretch;
-  width: 0.5px;
+  width: 1px;
 `;
 export const SvgChevronUp = styled(ChevronUp)`
-  fill: #d0d0d0;
+  fill: #b4b4b4;
 `;
 export const SvgChevronDown = styled(ChevronDown)`
-  fill: #d0d0d0;
+  fill: #b4b4b4;
 `;
 export const Options = styled.ul<OptionsProps>`
   width: 100%;

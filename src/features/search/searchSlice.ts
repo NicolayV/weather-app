@@ -31,12 +31,15 @@ const searchCitiesNamesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loadCitiesNames.fulfilled, (state, { payload }) => {
-        state.list = payload.data.list.map(({ id, name, sys, coord }) => ({
-          id,
-          name,
-          country: sys.country,
-          coord: { lat: coord.lat, lon: coord.lon },
-        }));
+        state.list = payload.data.list.map(
+          ({ id, name, sys, coord, weather }) => ({
+            id,
+            name,
+            country: sys.country,
+            coord: { lat: coord.lat, lon: coord.lon },
+            weather_icon: weather[0].icon,
+          })
+        );
         state.status = "received";
       })
 
