@@ -1,8 +1,22 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { geoApiOptions } from "config";
 import { RootState } from "store";
 import { Extra, Status } from "types";
-import { FetchCitiesNames, SearchSlice } from "./types";
+import {
+  FetchAutoCompeteCityName,
+  FetchCitiesNames,
+  SearchSlice,
+} from "./types";
 
+export const loadAutoCompeteCityName = createAsyncThunk<
+  {
+    data: FetchAutoCompeteCityName;
+  },
+  string,
+  { extra: Extra }
+>("@@search/load-auto-comp-names", (name, { extra: { client, api } }) => {
+  return client.get(api.getAutoCompeteCityName(name), geoApiOptions);
+});
 export const loadCitiesNames = createAsyncThunk<
   {
     data: FetchCitiesNames;
@@ -15,6 +29,7 @@ export const loadCitiesNames = createAsyncThunk<
 
 const initialState: SearchSlice = {
   status: "idle",
+  auto_comp_list: [],
   list: [],
   error: null,
 };
@@ -41,6 +56,14 @@ const searchCitiesNamesSlice = createSlice({
           })
         );
         state.status = "received";
+      })
+
+      .addCase(loadAutoCompeteCityName.fulfilled, (state, { payload }) => {
+        state.auto_comp_list = payload.data.data.map((city) => ({
+          id: city.id,
+          name: city.name,
+          region: city.region,
+        }));
       })
 
       .addMatcher(

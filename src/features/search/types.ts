@@ -1,5 +1,12 @@
 import { City, LoadCityNames, Status } from "types";
 
+export interface FetchAutoCompeteCityName {
+  data: {
+    id: number;
+    name: string;
+    region: string;
+  }[];
+}
 export interface FetchCitiesNames {
   list: {
     id: number;
@@ -19,8 +26,14 @@ export interface FetchCitiesNames {
   }[];
 }
 
+export interface AutoCompeteCity {
+  id: number;
+  name: string;
+  region: string;
+}
 export interface SearchSlice {
   status: Status;
+  auto_comp_list: AutoCompeteCity[];
   list: LoadCityNames[];
   error: string | null;
 }
@@ -29,7 +42,7 @@ export interface UseSearch {
   list: LoadCityNames[];
   isOpen: boolean;
   inputFieldValue: (city: string) => void;
-  currentCityHandler: ({
+  handleOnSearchClick: ({
     lat,
     lon,
     name,

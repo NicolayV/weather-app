@@ -4,7 +4,7 @@ import { useSearch } from "./useSearch";
 import * as S from "./styled";
 
 export const SearchBar = () => {
-  const { isOpen, list, inputFieldValue, currentCityHandler } = useSearch();
+  const { isOpen, list, inputFieldValue, handleOnSearchClick } = useSearch();
 
   return (
     <S.Container>
@@ -13,7 +13,7 @@ export const SearchBar = () => {
           isOpen={isOpen}
           options={list}
           fieldValue={inputFieldValue}
-          currentCityHandler={currentCityHandler}
+          onSearchItemClick={handleOnSearchClick}
         />
       </S.Wrapper>
     </S.Container>

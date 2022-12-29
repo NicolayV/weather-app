@@ -19,7 +19,7 @@ const useSearch = (): UseSearch => {
     dispatch(loadCitiesNames(city));
   };
 
-  const currentCityHandler = ({
+  const handleOnSearchClick = ({
     lat,
     lon,
     name,
@@ -29,7 +29,7 @@ const useSearch = (): UseSearch => {
     dispatch(setStatus("idle"));
   };
 
-  return { list, isOpen, inputFieldValue, currentCityHandler };
+  return { list, isOpen, inputFieldValue, handleOnSearchClick };
 };
 
 export { useSearch };

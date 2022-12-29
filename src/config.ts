@@ -18,3 +18,17 @@ export const getCitiesNames = (name: string) =>
 // Cities list
 export const getCityByCoord = (coord: CityCoord) =>
   `${BASE_URL_CUSTOM}onecall?lat=${coord.lat}&lon=${coord.lon}&units=metric&appid=${api_key_custom}`;
+
+// GeoDB Cities
+const api_key_geo = "ef3e89baf7msh9aae69027c88700p1b23b1jsn9e94a903d403";
+export const GEO_API_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
+
+export const geoApiOptions = {
+  headers: {
+    "X-RapidAPI-Key": api_key_geo,
+    "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
+  },
+};
+
+export const getAutoCompeteCityName = (name: string) =>
+  `${GEO_API_URL}/cities?minPopulation=1000000&namePrefix=${name}`;

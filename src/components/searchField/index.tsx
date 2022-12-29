@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 export interface SearchFieldProps {
   fieldValue: (text: string) => void;
-  currentCityHandler: (value: {
+  onSearchItemClick: (value: {
     lat: number | null;
     lon: number | null;
     name: string;
@@ -20,7 +20,7 @@ export type onChange = ChangeEventHandler<HTMLInputElement>;
 export type onSubmit = FormEventHandler<HTMLFormElement>;
 
 export const SearchField = (props: SearchFieldProps) => {
-  const { fieldValue, isOpen, options, currentCityHandler } = props;
+  const { fieldValue, isOpen, options, onSearchItemClick } = props;
   const [value, setValue] = useState("");
 
   const onSubmit: onSubmit = (e) => {
@@ -33,43 +33,46 @@ export const SearchField = (props: SearchFieldProps) => {
 
   const onChangeHandler: onChange = (e) => {
     setValue(e.target.value);
+    console.log(e.target.value);
   };
 
   return (
-    <S.Form onSubmit={onSubmit}>
-      <S.SearchInput onChange={onChangeHandler} value={value} />
-      <S.Button>Add</S.Button>
-      <S.SearchList show={isOpen}>
-        {options.length ? (
-          options.map(
-            ({ id, name, country, coord: { lat, lon }, weather_icon }) => {
-              return (
-                <S.SearchItem
-                  onClick={() =>
-                    currentCityHandler({ lat, lon, name, country })
-                  }
-                  key={id}
-                >
-                  <span>
-                    {name}, {country}
-                  </span>
-                  <span>
-                    lat: {lat} lat: {lon}
-                  </span>
-                  <WeatherIcon
-                    src={`https://openweathermap.org/img/wn/${weather_icon}@4x.png`}
-                  />
-                </S.SearchItem>
-              );
-            }
-          )
-        ) : (
-          <S.SearchItem>
-            Not found. To make search more precise put the city's name
-          </S.SearchItem>
-        )}
-      </S.SearchList>
-    </S.Form>
+    <>
+      <S.Form onSubmit={onSubmit}>
+        <S.SearchInput onChange={onChangeHandler} value={value} />
+        <S.Button>Add</S.Button>
+        <S.SearchList show={isOpen}>
+          {options.length ? (
+            options.map(
+              ({ id, name, country, coord: { lat, lon }, weather_icon }) => {
+                return (
+                  <S.SearchItem
+                    onClick={() =>
+                      onSearchItemClick({ lat, lon, name, country })
+                    }
+                    key={id}
+                  >
+                    <span>
+                      {name}, {country}
+                    </span>
+                    <span>
+                      lat: {lat} lat: {lon}
+                    </span>
+                    <WeatherIcon
+                      src={`https://openweathermap.org/img/wn/${weather_icon}@4x.png`}
+                    />
+                  </S.SearchItem>
+                );
+              }
+            )
+          ) : (
+            <S.SearchItem>
+              Not found. To make search more precise put the city's name
+            </S.SearchItem>
+          )}
+        </S.SearchList>
+      </S.Form>
+    </>
   );
 };
 
