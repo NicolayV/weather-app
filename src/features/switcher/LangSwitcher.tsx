@@ -1,6 +1,6 @@
 import * as S from "./styled";
+import { Select } from "../../components/select/index";
 
-import { Select } from "components/Select";
 import { useLang } from "./useLang";
 
 export const LangSwitcher = () => {

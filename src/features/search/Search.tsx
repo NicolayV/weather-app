@@ -1,7 +1,7 @@
 import React from "react";
-import { SearchField } from "components/SearchField";
 import { useSearch } from "./useSearch";
 import * as S from "./styled";
+import { SearchField } from "components/searchField";
 
 export const SearchBar = () => {
   const { isOpen, list, inputFieldValue, handleOnSearchClick } = useSearch();
