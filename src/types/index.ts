@@ -5,75 +5,70 @@ export type Extra = {
   client: Axios;
   api: typeof API;
 };
-
 export type Languages = "EN" | "UA" | "RU";
-
 export type Status = "idle" | "rejected" | "loading" | "received";
 
-export type CityNotation = "celsius" | "fahrenheit";
-
-export interface CityCoord {
-  lat: number | null;
-  lon: number | null;
-}
-export interface Forecast {
-  dt: number;
-  temp: number;
-}
-
-export interface City extends CityCoord {
-  id: number | null;
+export interface City {
+  id: string;
   name: string;
   country: string;
-  dt: number | null;
+  lat: string;
+  lon: string;
+
+  dt: string;
   weather_icon: string;
   weather_description: string;
-  temp: number | null;
-  temp_notation: CityNotation;
-  feels_like: number | null;
-  wind: number | null;
-  humidity: number | null;
-  pressure: number | null;
-  forecast: Forecast[];
+
+  temp: string;
+  temp_unit: "celsius" | "fahrenheit";
+  feels_like: string;
+
+  wind: string;
+  humidity: string;
+  pressure: string;
+
+  forecast: {
+    dt: string;
+    temp: string;
+  }[];
 }
 
-export interface LoadCityNames {
-  id: number | null;
-  name: string;
-  country: string;
-  coord: CityCoord;
-  weather_icon: string;
+// components
+export interface WeatherCard extends City {
+  deleteCardHandler: (id: string) => void;
+  toggleTempUnitHandler: (id: string) => void;
 }
 
-export interface FetchCityNameByCoord {
-  city: LoadCityNames;
-}
+export interface SearchListItem
+  extends Pick<
+    City,
+    "id" | "name" | "country" | "lat" | "lon" | "weather_icon"
+  > {}
 
-export interface FetchCityByCoord {
+// features
+export interface FetchCity {
   city: string;
-  current: {
-    dt: number;
-    weather: [
-      {
-        icon: string;
-        main: string;
-      }
-    ];
-    temp: number;
-    feels_like: number;
-    wind_speed: number;
-    humidity: number;
-    pressure: number;
-  };
+  country: string;
+  latitude: number;
+  longitude: number;
+
   daily: {
     dt: number;
     temp: {
       day: number;
     };
   }[];
-}
 
-export interface CardProps extends City {
-  deleteHandler: (id: number | null) => void;
-  updateCityNotationHandler: (id: number | null) => void;
+  current: {
+    dt: number;
+    weather: {
+      icon: string;
+      main: string;
+    }[];
+    temp: number;
+    feels_like: number;
+    wind_speed: number;
+    humidity: number;
+    pressure: number;
+  };
 }

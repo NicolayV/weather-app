@@ -1,13 +1,6 @@
-import { City, LoadCityNames, Status } from "types";
+import { SearchListItem, Status } from "types";
 
-export interface FetchAutoCompeteCityName {
-  data: {
-    id: number;
-    name: string;
-    region: string;
-  }[];
-}
-export interface FetchCitiesNames {
+export interface FetchSearchList {
   list: {
     id: number;
     name: string;
@@ -26,26 +19,32 @@ export interface FetchCitiesNames {
   }[];
 }
 
-export interface AutoCompeteCity {
-  id: number;
-  name: string;
-  region: string;
-}
 export interface SearchSlice {
   status: Status;
-  auto_comp_list: AutoCompeteCity[];
-  list: LoadCityNames[];
+  list: SearchListItem[];
+  auto_comp_list: [];
   error: string | null;
 }
 
 export interface UseSearch {
-  list: LoadCityNames[];
+  searchList: SearchListItem[];
   isOpen: boolean;
   inputFieldValue: (city: string) => void;
-  handleOnSearchClick: ({
-    lat,
-    lon,
-    name,
-    country,
-  }: Pick<City, "name" | "country" | "lat" | "lon">) => void;
+  handleOnSearchClick: (
+    value: Pick<SearchListItem, "name" | "country" | "lat" | "lon">
+  ) => void;
+}
+
+export interface IFetchAutoCompeteCityName {
+  data: {
+    id: number;
+    name: string;
+    region: string;
+  }[];
+}
+
+export interface IAutoCompeteCity {
+  id: number;
+  name: string;
+  region: string;
 }

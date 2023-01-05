@@ -1,49 +1,49 @@
 import { ReactNode } from "react";
 import styled from "styled-components";
-import { CardProps } from "types";
+import { WeatherCard } from "types";
 
-export interface CardLoadingProps extends Pick<CardProps, "temp"> {
+export interface ILoadingCard extends Pick<WeatherCard, "temp"> {
   children: ReactNode;
   isVisible: boolean;
 }
 
-export const LoadingCard = (props: CardLoadingProps) => {
+export const LoadingCard = (props: ILoadingCard) => {
+  const { temp, isVisible, children } = props;
+
+  const toggler = (value: string): boolean =>
+    Number(value) > 0 ? true : false;
+
   return (
-    <CardEl
-      isVisible={props.isVisible}
-      main={props.temp ? Math.sign(props.temp) : -1}
-    >
-      <Loading>{props.children}</Loading>
-    </CardEl>
+    <CardBase isVisible={isVisible} colorToggler={toggler(temp)}>
+      <Loading>{children}</Loading>
+    </CardBase>
   );
 };
 
-export interface CardElProps {
-  readonly main: number;
+export const CardBase = styled.div<{
+  readonly colorToggler: boolean;
   readonly isVisible: boolean;
-}
-
-export const CardEl = styled.div<CardElProps>`
-  padding: 5px;
+}>`
+  padding: 0.5rem;
   width: 300px;
   height: 280px;
 
-  background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};
+  background-color: ${({ colorToggler }) =>
+    colorToggler ? "var(--orange100)" : "var(--blue100)"};
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  gap: 0.5rem;
+  border-radius: var(--radii);
+  box-shadow: var(--base-shadow);
   &:hover {
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
-      rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    box-shadow: var(--base-shadow-hover);
   }
-  display: ${(props) => (props.isVisible ? "flex" : "none")};
+  display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
 `;
 
 export const Loading = styled.div`
-  font-size: 16px;
-  font-weight: 300;
+  font-size: var(--fs-16);
+  font-weight: var(--fw-light);
   display: flex;
   justify-content: center;
   align-items: center;

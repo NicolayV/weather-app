@@ -1,4 +1,4 @@
-import { City, CityCoord, Status } from "types";
+import { City, Status } from "types";
 
 export interface CitiesSlice {
   status: Status;
@@ -6,7 +6,11 @@ export interface CitiesSlice {
   error: string | null;
 }
 
-export interface LoadCity extends CityCoord {
-  name: string;
-  country: string;
+export interface LoadCity
+  extends Pick<City, "name" | "country" | "lat" | "lon"> {}
+
+export interface UseCities {
+  listOfCities: City[];
+  deleteCardHandler: (id: string) => void;
+  toggleTempUnitHandler: (id: string) => void;
 }

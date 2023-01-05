@@ -1,55 +1,58 @@
 import { useTranslation } from "react-i18next";
-import { CardProps } from "types";
+import { WeatherCard } from "types";
 import styled from "styled-components";
 
-export const TempPanel = (props: CardProps) => {
-  const { id, temp, temp_notation, feels_like, updateCityNotationHandler } =
-    props;
+interface ITempPanel
+  extends Pick<
+    WeatherCard,
+    "id" | "temp" | "temp_unit" | "feels_like" | "toggleTempUnitHandler"
+  > {}
+
+export const TempPanel = (props: ITempPanel) => {
+  const { id, temp, temp_unit, feels_like, toggleTempUnitHandler } = props;
   const { t } = useTranslation("translation");
 
-  const temperature = (temp: number | null) => {
-    if (temp !== null) {
-      const currentTemp = Math.round(temp);
-      return currentTemp > 0 ? `+ ${currentTemp}` : currentTemp;
+  const tempTransmitter = (temp: string): string => {
+    const tmp = Number(temp);
+    if (tmp) {
+      return tmp > 0 ? "+" + temp : temp;
     }
-    return temp;
+    return "N/A";
   };
 
   return (
     <Panel>
       <Section>
         <Temp>
-          {temp !== null
-            ? temperature(temp_notation === "celsius" ? temp : temp + 32)
+          {temp
+            ? tempTransmitter(
+                temp_unit === "celsius" ? temp : (Number(temp) + 32).toString()
+              )
             : "null"}
         </Temp>
         <TempSwitcher>
           <TempOption
-            tempSelected={temp_notation === "celsius" ? true : false}
-            onClick={() => updateCityNotationHandler(id)}
+            isSelected={temp_unit === "celsius" ? true : false}
+            onClick={() => toggleTempUnitHandler(id)}
           >
             &deg;C
           </TempOption>
           <Divider />
           <TempOption
-            tempSelected={temp_notation === "fahrenheit" ? true : false}
-            onClick={() => updateCityNotationHandler(id)}
+            isSelected={temp_unit === "fahrenheit" ? true : false}
+            onClick={() => toggleTempUnitHandler(id)}
           >
             &deg;F
           </TempOption>
         </TempSwitcher>
       </Section>
       <TempIndicator>
-        {t("feels_like", { ns: "translation" })}:{" "}
+        {t("feels_like", { ns: "translation" })}:
         <span>{feels_like} &deg;C</span>
       </TempIndicator>
     </Panel>
   );
 };
-
-export interface TempOptionProps {
-  readonly tempSelected: boolean;
-}
 
 export const Panel = styled.div`
   display: flex;
@@ -62,48 +65,50 @@ export const Section = styled(Panel)`
   align-items: center;
 `;
 export const Temp = styled.span`
-  font-size: 24px;
-  font-weight: 600;
+  font-size: var(--fs-18);
+  font-weight: var(--fw-normal);
   display: flex;
   background-color: transparent;
 `;
 export const TempSwitcher = styled.div`
-  padding: 2px 0;
+  padding: 0.2rem 0;
   align-self: flex-start;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
+  gap: 0.5rem;
   background-color: transparent;
 `;
-export const TempOption = styled.span<TempOptionProps>`
-  font-size: 14px;
-  font-weight: 600;
+export const TempOption = styled.span<{
+  readonly isSelected: boolean;
+}>`
+  font-size: var(--fs-14);
+  font-weight: var(--fw-normal);
   background-color: transparent;
   cursor: pointer;
-  color: ${(props) => (props.tempSelected ? "#111517" : "#d0d0d0")};
+  color: ${({ isSelected }) => (isSelected ? "#111517" : "var(--grey200)")};
   &:hover {
-    color: #3c99dc;
+    color: var(--blue400);
   }
 `;
 export const Divider = styled.div`
-  background-color: #808080;
+  background-color: var(--grey600);
   align-self: stretch;
   width: 1px;
 `;
 export const TempIndicator = styled.span`
-  font-size: 10px;
-  font-weight: 800;
-  color: #d0d0d0;
+  font-size: var(--fs-10);
+  font-weight: var(--fw-bold);
+  color: var(--grey200);
   display: flex;
   justify-content: center;
   background-color: transparent;
   display: flex;
-  gap: 5px;
+  gap: 0.5rem;
   & span {
     font-size: inherit;
     font-weight: inherit;
-    color: #b4b4b4;
+    color: var(--grey300);
     background-color: transparent;
   }
 `;

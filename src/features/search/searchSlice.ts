@@ -1,30 +1,27 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { geoApiOptions } from "config";
 import { RootState } from "store";
-import { Extra, Status } from "types";
-import {
-  FetchAutoCompeteCityName,
-  FetchCitiesNames,
-  SearchSlice,
-} from "./types";
+import { Extra, Status, SearchListItem } from "types";
+import { stateAdapter } from "./helper";
+import { IFetchAutoCompeteCityName, SearchSlice } from "./types";
 
 export const loadAutoCompeteCityName = createAsyncThunk<
   {
-    data: FetchAutoCompeteCityName;
+    data: IFetchAutoCompeteCityName;
   },
   string,
   { extra: Extra }
 >("@@search/load-auto-comp-names", (name, { extra: { client, api } }) => {
   return client.get(api.getAutoCompeteCityName(name), geoApiOptions);
 });
+
 export const loadCitiesNames = createAsyncThunk<
-  {
-    data: FetchCitiesNames;
-  },
+  SearchListItem[],
   string,
   { extra: Extra }
->("@@search/load-cities-names", (name, { extra: { client, api } }) => {
-  return client.get(api.getCitiesNames(name));
+>("@@search/load-cities-names", async (name, { extra: { client, api } }) => {
+  const { data } = await client.get(api.getCitiesNames(name));
+  return stateAdapter(data);
 });
 
 const initialState: SearchSlice = {
@@ -45,41 +42,26 @@ const searchCitiesNamesSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(loadCitiesNames.fulfilled, (state, { payload }) => {
-        state.list = payload.data.list.map(
-          ({ id, name, sys, coord, weather }) => ({
-            id,
-            name,
-            country: sys.country,
-            coord: { lat: coord.lat, lon: coord.lon },
-            weather_icon: weather[0].icon,
-          })
-        );
-        state.status = "received";
+      .addCase(loadCitiesNames.fulfilled, (_, { payload }) => {
+        return {
+          status: "received",
+          auto_comp_list: [],
+          list: payload,
+          error: null,
+        };
+      })
+      .addCase(loadCitiesNames.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(loadCitiesNames.rejected, (state) => {
+        state.status = "rejected";
+        state.error = "Cannot load data";
       })
 
-      .addCase(loadAutoCompeteCityName.fulfilled, (state, { payload }) => {
-        state.auto_comp_list = payload.data.data.map((city) => ({
-          id: city.id,
-          name: city.name,
-          region: city.region,
-        }));
-      })
-
-      .addMatcher(
-        (action) => action.type.endsWith("/load-cities-names/rejected"),
-        (state) => {
-          state.status = "rejected";
-          state.error = "Cannot load data";
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith("/load-cities-names/pending"),
-        (state) => {
-          state.status = "loading";
-          state.error = null;
-        }
-      );
+      .addCase(loadAutoCompeteCityName.fulfilled, (_, { payload }) => {
+        console.log(payload);
+      });
   },
 });
 

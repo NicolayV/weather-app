@@ -3,15 +3,16 @@ import { Card } from "../../components/Card/Card";
 import { useCities } from "./useCities";
 
 export const Cities = () => {
-  const { list, deleteHandler, updateCityNotationHandler } = useCities();
+  const { listOfCities, deleteCardHandler, toggleTempUnitHandler } =
+    useCities();
 
   return (
     <>
-      {list.map((props: City) => {
+      {listOfCities.map((props: City) => {
         return (
           <Card
-            deleteHandler={deleteHandler}
-            updateCityNotationHandler={updateCityNotationHandler}
+            deleteCardHandler={deleteCardHandler}
+            toggleTempUnitHandler={toggleTempUnitHandler}
             key={props.id}
             {...props}
           />

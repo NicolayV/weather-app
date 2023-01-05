@@ -2,8 +2,9 @@ import { loadCity } from "features/cities/citiesSlice";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
-import { City } from "types";
 import { loadCitiesNames, selectCitiesNames, setStatus } from "./searchSlice";
+
+import { City } from "types";
 import { UseSearch } from "./types";
 
 const useSearch = (): UseSearch => {
@@ -11,6 +12,7 @@ const useSearch = (): UseSearch => {
   const { list, status } = useSelector(selectCitiesNames);
 
   const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     setIsOpen(status === "received" ? true : false);
   }, [status]);
@@ -29,7 +31,7 @@ const useSearch = (): UseSearch => {
     dispatch(setStatus("idle"));
   };
 
-  return { list, isOpen, inputFieldValue, handleOnSearchClick };
+  return { searchList: list, isOpen, inputFieldValue, handleOnSearchClick };
 };
 
 export { useSearch };

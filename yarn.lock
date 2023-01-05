@@ -2081,7 +2081,7 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@testing-library/dom@^8.5.0":
+"@testing-library/dom@^8.11.1", "@testing-library/dom@^8.5.0":
   version "8.19.1"
   resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-8.19.1.tgz#0e2dafd281dedb930bb235eac1045470b4129d0e"
   integrity sha512-P6iIPyYQ+qH8CvGauAqanhVnjrnRe0IZFSYCeGkSRW9q3u8bdVn2NPI+lasFyVsEQn1J/IFmp5Aax41+dAP9wg==
@@ -2095,7 +2095,7 @@
     lz-string "^1.4.4"
     pretty-format "^27.0.2"
 
-"@testing-library/jest-dom@^5.14.1":
+"@testing-library/jest-dom@^5.16.5":
   version "5.16.5"
   resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-5.16.5.tgz#3912846af19a29b2dbf32a6ae9c31ef52580074e"
   integrity sha512-N5ixQ2qKpi5OLYfwQmUb/5mSV9LneAcaUfp32pn4yCnpb8r/Yz0pXFPck21dIicKmi+ta5WRAknkZCfA8refMA==
@@ -2479,7 +2479,7 @@
     "@types/react" "*"
     csstype "^3.0.2"
 
-"@types/testing-library__jest-dom@^5.9.1":
+"@types/testing-library__jest-dom@^5.14.5", "@types/testing-library__jest-dom@^5.9.1":
   version "5.14.5"
   resolved "https://registry.yarnpkg.com/@types/testing-library__jest-dom/-/testing-library__jest-dom-5.14.5.tgz#d113709c90b3c75fdb127ec338dad7d5f86c974f"
   integrity sha512-SBwbxYoyPIvxHbeHxTZX2Pe/74F/tX2/D3mMvzabdeJ25bBojfW0TyB8BHrbq/9zaaKICJZjLP+8r6AeZMFCuQ==
@@ -4551,6 +4551,15 @@ eslint-plugin-import@^2.25.3:
     object.values "^1.1.5"
     resolve "^1.22.0"
     tsconfig-paths "^3.14.1"
+
+eslint-plugin-jest-dom@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest-dom/-/eslint-plugin-jest-dom-4.0.3.tgz#ec17171385660e78465cce9f3e1ce90294ea1190"
+  integrity sha512-9j+n8uj0+V0tmsoS7bYC7fLhQmIvjRqRYEcbDSi+TKPsTThLLXCyj5swMSSf/hTleeMktACnn+HFqXBr5gbcbA==
+  dependencies:
+    "@babel/runtime" "^7.16.3"
+    "@testing-library/dom" "^8.11.1"
+    requireindex "^1.2.0"
 
 eslint-plugin-jest@^25.3.0:
   version "25.7.0"
@@ -8369,6 +8378,11 @@ require-from-string@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
   integrity sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
+
+requireindex@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/requireindex/-/requireindex-1.2.0.tgz#3463cdb22ee151902635aa6c9535d4de9c2ef1ef"
+  integrity sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==
 
 requires-port@^1.0.0:
   version "1.0.0"

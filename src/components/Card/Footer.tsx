@@ -1,9 +1,23 @@
-import { CardProps } from "types";
+import { WeatherCard } from "types";
 import styled from "styled-components";
 import { TempPanel } from "./TempPanel";
 import { WeatherPanel } from "./WeatherPanel";
 
-export const CardFooter = (props: CardProps) => {
+interface ICardFooter
+  extends Pick<
+    WeatherCard,
+    | "id"
+    | "temp"
+    | "temp_unit"
+    | "feels_like"
+    | "toggleTempUnitHandler"
+    | "humidity"
+    | "pressure"
+    | "wind"
+    | "temp"
+  > {}
+
+export const CardFooter = (props: ICardFooter) => {
   return (
     <Footer>
       <TempPanel {...props} />

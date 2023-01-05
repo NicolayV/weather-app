@@ -3,34 +3,50 @@
 :root {
   /* Typography */
   --family: "Nunito Sans", sans-serif;
-  --fs-sm: 14px;
-  --fs-md: 16px;
+  --fs-10: 10px;
+  --fs-12: 12px;
+  --fs-14: 14px;
+  --fs-16: 16px;
+  --fs-18: 18px;
 
   --fw-light: 300;
   --fw-normal: 600;
   --fw-bold: 800;
 
   /* Other */
-  --radii: 0.5rem;
+  --radii: 5px;
 
   /* colors */
-  --black100: hsl(200, 15%, 8%);
+  --white100: #fafafa;
 
-  --white100: hsl(0, 0%, 100%);
-  --white98: hsl(0, 0%, 98%);
+  --grey100: #ececec;
+  --grey200: #d0d0d0;
+  --grey300: #b4b4b4;
+  --grey600: #808080;
 
-  --button-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px,
-    rgba(0, 0, 0, 0.23) 0px 3px 6px;
-  --header-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  --shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  --blue100: #ebeafe;
+  --blue200: #66d3fa;
+  --blue300: #2196f3;
+  --blue400: #3c99dc;
+
+  --orange100: #fef2e2;
+  --orange300: #ffa437;
+
+  --black100: #121517;
+
+  /* shadow */
+  --element-shadow: #959da533 0px 8px 24px;
+  --base-shadow: #0000003d 0px 3px 8px;
+  --base-shadow-hover: #00000028 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
 * {
   margin: 0;
   box-sizing: border-box;
   font-family: var(--family);
-  font-size: 10px;
+  font-size: var(--fs-10);
   color: var(--black100);
   font-weight: var(--fw-light);
-  background-color: var(--white98);
+  background-color: var(--white100);
 }

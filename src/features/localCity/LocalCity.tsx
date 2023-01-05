@@ -5,13 +5,13 @@ import { useLocal } from "./useLocal";
 import { LoadingCard } from "components/LoadingCard";
 
 export const LocalCity = () => {
-  const { localCity, updateCityNotationHandler, deleteHandler } = useLocal();
+  const { localCity, toggleTempUnitHandler, deleteCardHandler } = useLocal();
   return (
     <>
       {localCity.status === "received" ? (
         <Card
-          updateCityNotationHandler={updateCityNotationHandler}
-          deleteHandler={deleteHandler}
+          toggleTempUnitHandler={toggleTempUnitHandler}
+          deleteCardHandler={deleteCardHandler}
           {...localCity}
         />
       ) : (

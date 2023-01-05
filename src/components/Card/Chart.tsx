@@ -1,4 +1,6 @@
 import React from "react";
+import styled from "styled-components";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +12,7 @@ import {
   Legend,
 } from "chart.js";
 
-import { Line } from "react-chartjs-2";
-import styled from "styled-components";
+import { WeatherCard } from "types";
 
 ChartJS.register(
   CategoryScale,
@@ -23,34 +24,16 @@ ChartJS.register(
   Legend
 );
 
-interface ChartLineProps {
-  temp: number | null;
-  forecast: {
-    dt: number;
-    temp: number;
-  }[];
-}
+interface IChartLine extends Pick<WeatherCard, "temp" | "forecast"> {}
 
-export const ChartLine = (props: ChartLineProps) => {
-  const chartData = props.forecast.map(
-    (item: { temp: number; dt: number }) => ({
-      temp: Math.round(item.temp),
-      dt: new Date(item.dt * 1000).toLocaleDateString().slice(0, -5),
-    })
-  );
+export const ChartLine = (props: IChartLine) => {
+  const { temp, forecast } = props;
 
-  const labels = chartData.map((i: { dt: string }) => i.dt);
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: "temper",
-        data: chartData.map((i: { temp: number }) => i.temp),
-        backgroundColor: "#2196F3",
-        borderColor: "#2196F3",
-      },
-    ],
-  };
+  const toggler = (value: string): boolean =>
+    Number(value) > 0 ? true : false;
+
+  const dateConverter = (value: string) =>
+    new Date(Number(value)).toLocaleDateString().slice(0, -5);
 
   const options = {
     plugins: {
@@ -60,23 +43,43 @@ export const ChartLine = (props: ChartLineProps) => {
     },
   };
 
+  const chartData = forecast.map(({ temp, dt }) => ({
+    temp,
+    dt: dateConverter(dt),
+  }));
+
+  const labels = chartData.map(({ dt }) => dt);
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "temper",
+        data: chartData.map(({ temp }) => temp),
+        backgroundColor: "#2196F3",
+        borderColor: "#2196F3",
+      },
+    ],
+  };
+
   return (
-    <Cont main={props.temp ? Math.sign(props.temp) : -1}>
+    <Wrapper colorToggler={toggler(temp)}>
       <Line data={data} options={options} />
-    </Cont>
+    </Wrapper>
   );
 };
 
-export interface ContProps {
-  readonly main: number;
-}
-const Cont = styled.div<ContProps>`
+const Wrapper = styled.div<{
+  readonly colorToggler: boolean;
+}>`
   width: 280px;
   height: 100px;
   display: flex;
-  background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};
+  background-color: ${({ colorToggler }) =>
+    colorToggler ? "var(--orange100)" : "var(--blue100)"};
   justify-content: center;
   & * {
-    background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};
+    background-color: ${({ colorToggler }) =>
+      colorToggler ? "var(--orange100)" : "var(--blue100)"};
   }
 `;

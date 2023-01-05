@@ -1,37 +1,39 @@
 import styled from "styled-components";
-import { CardProps } from "types";
+import { WeatherCard } from "types";
 import { CardFooter } from "./Footer";
 import { CardHeader } from "./Header";
 import { ChartLine } from "./Chart";
 
-export const Card = (props: CardProps) => {
+export const Card = (props: WeatherCard) => {
+  const toggler = (value: string): boolean =>
+    Number(value) > 0 ? true : false;
+
   return (
-    <CardEl main={props.temp ? Math.sign(props.temp) : -1}>
+    <CardBase colorToggler={toggler(props.temp)}>
       <CardHeader {...props} />
       <Chart>
         <ChartLine {...props} />
       </Chart>
       <CardFooter {...props} />
-    </CardEl>
+    </CardBase>
   );
 };
 
-export interface CardElProps {
-  readonly main: number;
-}
-export const CardEl = styled.div<CardElProps>`
-  padding: 5px;
+export const CardBase = styled.div<{
+  readonly colorToggler: boolean;
+}>`
+  padding: 0.5rem;
   width: 300px;
   height: 280px;
-  background-color: ${(props) => (props.main >= 0 ? "#fef2e2" : "#ebeafe")};
+  background-color: ${({ colorToggler }) =>
+    colorToggler ? "var(--orange100)" : "var(--blue100)"};
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  border-radius: 5px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  gap: 0.5rem;
+  border-radius: var(--radii);
+  box-shadow: var(--base-shadow);
   &:hover {
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
-      rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    box-shadow: var(--base-shadow-hover);
   }
 `;
 export const Chart = styled.div`

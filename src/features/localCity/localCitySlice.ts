@@ -1,59 +1,98 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import {
-  CityCoord,
-  Extra,
-  FetchCityByCoord,
-  FetchCityNameByCoord,
-} from "types";
-import { CitySlice, FetchCityNameByIp } from "./types";
+import { Extra, City } from "types";
+import { stateAdapter } from "./helper";
+import { CityCoord, LocalCitySlice } from "./types";
 
-export const loadLocalCityNameByIp = createAsyncThunk<
-  {
-    data: FetchCityNameByIp;
-  },
+export const loadCityByIp = createAsyncThunk<
+  City,
   undefined,
-  { extra: Extra }
->("@@loc-city/get-name-by-ip", (_, { extra: { client, api } }) => {
-  return client.get(api.getLocalCityNameByIp());
-});
+  { state: RootState; extra: Extra }
+>(
+  "@@loc-city/city-by-ip",
+  async (_, { extra: { client, api } }) => {
+    const {
+      data: { city, country, latitude, longitude },
+    } = await client.get(api.getLocalCityNameByIp());
 
-export const loadLocalCityByCoord = createAsyncThunk<
-  {
-    data: FetchCityByCoord;
+    const { data } = await client.get(
+      api.getCityByCoord({ lat: latitude, lon: longitude })
+    );
+
+    const result = stateAdapter({
+      city,
+      country,
+      latitude,
+      longitude,
+      ...data,
+    });
+    return result;
   },
-  CityCoord,
-  { extra: Extra }
->("@@loc-city/get-city-by-coord", (coord, { extra: { client, api } }) => {
-  return client.get(api.getCityByCoord(coord));
-});
-
-export const loadLocalCityNameByCoord = createAsyncThunk<
   {
-    data: FetchCityNameByCoord;
-  },
-  CityCoord,
-  { extra: Extra }
->("@@loc-city/get-city-name-by-coord", (coord, { extra: { client, api } }) => {
-  return client.get(api.getLocalCityNameByCoord(coord));
-});
+    condition: (_, store) => {
+      const state = store.getState();
+      if (state.locCity.status === "loading") {
+        return false;
+      }
+    },
+  }
+);
 
-const initialState: CitySlice = {
+export const loadCityByNav = createAsyncThunk<
+  City,
+  CityCoord,
+  { state: RootState; extra: Extra }
+>(
+  "@@loc-city/city-by-nav",
+  async (coords, { extra: { client, api } }) => {
+    const {
+      data: {
+        city: { name, coord, country },
+      },
+    } = await client.get(api.getLocalCityNameByCoord(coords));
+
+    const {
+      data: { daily, current },
+    } = await client.get(
+      api.getCityByCoord({ lat: coord.lat, lon: coord.lon })
+    );
+
+    const result = stateAdapter({
+      city: name,
+      country,
+      latitude: coord.lat,
+      longitude: coord.lon,
+      daily,
+      current,
+    });
+    return result;
+  },
+  {
+    condition: (_, store) => {
+      const state = store.getState();
+      if (state.locCity.status === "loading") {
+        return false;
+      }
+    },
+  }
+);
+
+const initialState: LocalCitySlice = {
   status: "idle",
-  id: null,
+  id: "",
   name: "",
   country: "",
-  lat: null,
-  lon: null,
-  dt: null,
+  lat: "",
+  lon: "",
+  dt: "",
   weather_icon: "",
   weather_description: "",
-  temp: null,
-  temp_notation: "celsius",
-  feels_like: null,
-  wind: null,
-  humidity: null,
-  pressure: null,
+  temp: "",
+  temp_unit: "celsius",
+  feels_like: "",
+  wind: "",
+  humidity: "",
+  pressure: "",
   forecast: [],
   error: null,
 };
@@ -66,74 +105,51 @@ const localCitySlice = createSlice({
       ...initialState,
       status: "canceled",
     }),
-
-    updateLocalCityNotation: (
-      state,
-      { payload }: PayloadAction<number | null>
-    ) => {
-      if (typeof payload === "number") {
-        state.temp_notation =
-          state.temp_notation === "fahrenheit" ? "celsius" : "fahrenheit";
+    updateLocalCity: (state, { payload }: PayloadAction<string>) => {
+      if (typeof payload === "string") {
+        state.temp_unit =
+          state.temp_unit === "fahrenheit" ? "celsius" : "fahrenheit";
       }
     },
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(
-        loadLocalCityNameByIp.fulfilled,
-        (state, { payload: { data } }) => {
-          state.name = data.city;
-          state.country = data.city;
-          state.lat = data.latitude;
-          state.lon = data.longitude;
-          state.status = "received-name-by-ip";
-        }
-      )
-      .addCase(
-        loadLocalCityByCoord.fulfilled,
-        (
-          state,
-          {
-            payload: {
-              data: { current, daily },
-            },
-          }
-        ) => {
-          state.id = current.dt;
-          state.dt = current.dt;
-          state.weather_icon = current.weather[0].icon;
-          state.weather_description = current.weather[0].main;
-          state.temp = current.temp;
-          state.temp = current.temp;
-          state.temp_notation = "celsius";
-          state.feels_like = current.feels_like;
-          state.humidity = current.humidity;
-          state.pressure = current.pressure;
-          state.forecast = daily.map((day) => ({
-            dt: day.dt,
-            temp: day.temp.day,
-          }));
+      .addCase(loadCityByIp.fulfilled, (_, { payload }) => {
+        return {
+          status: "received",
+          ...payload,
+          error: null,
+        };
+      })
+      .addCase(loadCityByIp.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(loadCityByIp.rejected, (state) => {
+        state.status = "rejected";
+        state.error = "Cannot load data";
+      })
 
-          state.status = "received";
-        }
-      )
-
-      .addCase(
-        loadLocalCityNameByCoord.fulfilled,
-        (state, { payload: { data } }) => {
-          state.name = data.city.name;
-          state.country = data.city.country;
-          state.lat = data.city.coord.lat;
-          state.lon = data.city.coord.lon;
-          state.status = "received-name-by-nav";
-        }
-      );
+      .addCase(loadCityByNav.fulfilled, (_, { payload }) => {
+        return {
+          status: "received",
+          ...payload,
+          error: null,
+        };
+      })
+      .addCase(loadCityByNav.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(loadCityByNav.rejected, (state) => {
+        state.status = "rejected";
+        state.error = "Cannot load data";
+      });
   },
 });
 
 export const localCityReducer = localCitySlice.reducer;
-export const { deleteLocalCity, updateLocalCityNotation } =
-  localCitySlice.actions;
+export const { deleteLocalCity, updateLocalCity } = localCitySlice.actions;
 
 export const selectLocalCity = (state: RootState) => state.locCity;

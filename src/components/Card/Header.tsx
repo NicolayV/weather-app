@@ -1,8 +1,20 @@
-import { CardProps } from "types";
+import { WeatherCard } from "types";
 import styled from "styled-components";
 import { Close } from "@styled-icons/ionicons-solid";
 
-export const CardHeader = (props: CardProps) => {
+interface ICardHeader
+  extends Pick<
+    WeatherCard,
+    | "id"
+    | "name"
+    | "country"
+    | "dt"
+    | "weather_icon"
+    | "weather_description"
+    | "deleteCardHandler"
+  > {}
+
+export const CardHeader = (props: ICardHeader) => {
   const {
     id,
     name,
@@ -10,34 +22,36 @@ export const CardHeader = (props: CardProps) => {
     dt,
     weather_icon,
     weather_description,
-    deleteHandler,
+    deleteCardHandler,
   } = props;
 
-  const date = new Date(dt ? dt * 1000 : 0)
+  const date = new Date(dt ? Number(dt) : 0)
     .toUTCString()
     .slice(0, -7)
     .split(" ")
-    .filter((word) => word !== "2022")
+    .filter((word) => word !== "2023")
     .join(" ");
 
   return (
     <Header>
-      <CloseButton onClick={() => deleteHandler(id)}>
+      <CloseButton onClick={() => deleteCardHandler(id)}>
         <SvgClose />
       </CloseButton>
 
       <TitlePanel>
         <Title>
-          {name}, {country}
+          {name ? name : "N/A"}, {country ? country : "N/A"}
         </Title>
-        <SubTitle>{date}</SubTitle>
+        <SubTitle>{date ? date : "N/A"}</SubTitle>
       </TitlePanel>
 
       <WeatherIconBar>
         <WeatherIcon
           src={`https://openweathermap.org/img/wn/${weather_icon}@4x.png`}
         />
-        <WeatherType>{weather_description}</WeatherType>
+        <WeatherType>
+          {weather_description ? weather_description : "N/A"}
+        </WeatherType>
       </WeatherIconBar>
     </Header>
   );
@@ -52,24 +66,24 @@ export const Header = styled.div`
 export const TitlePanel = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1rem;
   background-color: transparent;
 `;
 
 export const Title = styled.div`
-  font-size: 18px;
-  font-weight: 600;
+  font-size: var(--fs-18);
+  font-weight: var(--fw-normal);
   background-color: transparent;
 `;
 export const SubTitle = styled.span`
-  font-size: 16px;
-  font-weight: 300;
+  font-size: var(--fs-16);
+  font-weight: var(--fw-light);
   background-color: transparent;
 `;
 export const WeatherIconBar = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 0.5rem;
   background-color: transparent;
 `;
 export const WeatherIcon = styled.img.attrs({
@@ -79,10 +93,10 @@ export const WeatherIcon = styled.img.attrs({
   background-color: transparent;
 `;
 export const WeatherType = styled.span`
-  padding-right: 10px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #d0d0d0;
+  padding-right: 1rem;
+  font-size: var(--fs-12);
+  font-weight: var(--fw-normal);
+  color: var(--grey200);
   background-color: transparent;
 `;
 export const CloseButton = styled.button`
@@ -102,7 +116,7 @@ export const CloseButton = styled.button`
   }
 `;
 export const SvgClose = styled(Close)`
-  fill: #d0d0d0;
+  fill: var(--grey200);
   width: 16px;
   background-color: transparent;
 `;

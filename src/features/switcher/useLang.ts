@@ -3,10 +3,10 @@ import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "store";
 import { selectLanguage, setLanguage } from "./langSlice";
-import { UseLangProps } from "./types";
+import { UseLang } from "./types";
 import { Languages } from "types";
 
-const useLang = (): UseLangProps => {
+const useLang = (): UseLang => {
   const dispatch = useAppDispatch();
   const { lang: value } = useSelector(selectLanguage);
   const { i18n } = useTranslation("translation");

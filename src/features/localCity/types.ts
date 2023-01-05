@@ -1,33 +1,21 @@
 import { City, Status } from "types";
 
-export interface CitySlice extends City {
-  status:
-    | "idle"
-    | "rejected"
-    | "loading"
-    | "received"
-    | "received-name-by-ip"
-    | "received-name-by-nav"
-    | "canceled";
+export interface LocalCitySlice extends City {
+  status: Status | "canceled";
   error: string | null;
 }
 
-export interface FetchCityNameByIp {
-  city: string;
-  country: string;
-  latitude: number;
-  longitude: number;
+export interface CityCoord extends Pick<City, "lat" | "lon"> {}
+
+export interface UseLocal {
+  localCity: LocalCitySlice;
+  deleteCardHandler: () => void;
+  toggleTempUnitHandler: (id: string) => void;
 }
 
-export interface ShowPosition {
+export interface IShowPosition {
   coords: {
     latitude: number;
     longitude: number;
   };
-}
-
-export interface UseLocalProps {
-  localCity: CitySlice;
-  deleteHandler: () => void;
-  updateCityNotationHandler: (id: number | null) => void;
 }

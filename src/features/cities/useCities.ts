@@ -1,26 +1,20 @@
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
-import { City } from "types";
-import { deleteCity, selectCoordCitiesSlice, updateCity } from "./citiesSlice";
+import { deleteCity, selectCities, updateCity } from "./citiesSlice";
+import { UseCities } from "./types";
 
-interface UseCitiesProps {
-  list: City[];
-  deleteHandler: (id: number | null) => void;
-  updateCityNotationHandler: (id: number | null) => void;
-}
-
-const useCities = (): UseCitiesProps => {
+const useCities = (): UseCities => {
   const dispatch = useAppDispatch();
-  const { list } = useSelector(selectCoordCitiesSlice);
+  const { list } = useSelector(selectCities);
 
-  const deleteHandler = (id: number | null) => {
+  const deleteCardHandler = (id: string) => {
     dispatch(deleteCity(id));
   };
 
-  const updateCityNotationHandler = (id: number | null) => {
+  const toggleTempUnitHandler = (id: string) => {
     dispatch(updateCity(id));
   };
 
-  return { list, deleteHandler, updateCityNotationHandler };
+  return { listOfCities: list, deleteCardHandler, toggleTempUnitHandler };
 };
 export { useCities };
