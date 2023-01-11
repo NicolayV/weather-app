@@ -22,15 +22,14 @@ export interface FetchSearchList {
 export interface SearchSlice {
   status: Status;
   list: SearchListItem[];
-  auto_comp_list: [];
   error: string | null;
 }
 
 export interface UseSearch {
   searchList: SearchListItem[];
   isOpen: boolean;
-  inputFieldValue: (city: string) => void;
-  handleOnSearchClick: (
+  submitFieldValue: (city: string) => void;
+  selectedListItem: (
     value: Pick<SearchListItem, "name" | "country" | "lat" | "lon">
   ) => void;
 }

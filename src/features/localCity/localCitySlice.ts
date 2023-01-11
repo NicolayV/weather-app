@@ -1,62 +1,32 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import { Extra, City } from "types";
+import { Extra, City, FetchCity } from "types";
 import { stateAdapter } from "./helper";
 import { CityCoord, LocalCitySlice } from "./types";
-
-export const loadCityByIp = createAsyncThunk<
-  City,
-  undefined,
-  { state: RootState; extra: Extra }
->(
-  "@@loc-city/city-by-ip",
-  async (_, { extra: { client, api } }) => {
-    const {
-      data: { city, country, latitude, longitude },
-    } = await client.get(api.getLocalCityNameByIp());
-
-    const { data } = await client.get(
-      api.getCityByCoord({ lat: latitude, lon: longitude })
-    );
-
-    const result = stateAdapter({
-      city,
-      country,
-      latitude,
-      longitude,
-      ...data,
-    });
-    return result;
-  },
-  {
-    condition: (_, store) => {
-      const state = store.getState();
-      if (state.locCity.status === "loading") {
-        return false;
-      }
-    },
-  }
-);
 
 export const loadCityByNav = createAsyncThunk<
   City,
   CityCoord,
   { state: RootState; extra: Extra }
 >(
-  "@@loc-city/city-by-nav",
+  "@@local-city/load",
   async (coords, { extra: { client, api } }) => {
+    type FetchQ = {
+      city: {
+        name: string;
+        country: string;
+        coord: {
+          lat: number & string;
+          lon: number & string;
+        };
+      };
+    };
     const {
-      data: {
-        city: { name, coord, country },
-      },
-    } = await client.get(api.getLocalCityNameByCoord(coords));
-
-    const {
-      data: { daily, current },
-    } = await client.get(
+      city: { name, country, coord },
+    } = await client<FetchQ>(api.getLocalCityNameByCoord(coords));
+    const { daily, current } = await client<FetchCity>(
       api.getCityByCoord({ lat: coord.lat, lon: coord.lon })
     );
-
     const result = stateAdapter({
       city: name,
       country,
@@ -98,7 +68,7 @@ const initialState: LocalCitySlice = {
 };
 
 const localCitySlice = createSlice({
-  name: "@@loc-city",
+  name: "@@local-city",
   initialState,
   reducers: {
     deleteLocalCity: (_, action: PayloadAction<undefined>) => ({
@@ -115,22 +85,6 @@ const localCitySlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(loadCityByIp.fulfilled, (_, { payload }) => {
-        return {
-          status: "received",
-          ...payload,
-          error: null,
-        };
-      })
-      .addCase(loadCityByIp.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(loadCityByIp.rejected, (state) => {
-        state.status = "rejected";
-        state.error = "Cannot load data";
-      })
-
       .addCase(loadCityByNav.fulfilled, (_, { payload }) => {
         return {
           status: "received",

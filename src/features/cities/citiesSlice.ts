@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "store";
-import { City, Extra } from "types";
+import { City, Extra, FetchCity } from "types";
 import { stateAdapter } from "./helper";
 import { CitiesSlice, LoadCity } from "./types";
 
@@ -8,8 +8,12 @@ export const loadCity = createAsyncThunk<
   Omit<City, "name" | "country">,
   LoadCity,
   { extra: Extra }
->("@@cities/load-city", async (coord, { extra: { client, api } }) => {
-  const { data } = await client.get(api.getCityByCoord(coord));
+>("@@cities/load", async (coord, { extra: { client, api } }) => {
+  type Fetch = Omit<FetchCity, "name" | "country"> & {
+    lat: string;
+    lon: string;
+  };
+  const data = await client<Fetch>(api.getCityByCoord(coord));
   return stateAdapter(data);
 });
 

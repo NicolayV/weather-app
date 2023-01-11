@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Language } from "@styled-icons/material-rounded";
-
-import { Select } from "../../components/Select/Select";
+import LangToggler from "../../components/LangToggler/LangToggler";
 import { useLang } from "./useLang";
 
 export const LangSwitcher = () => {
@@ -12,7 +11,7 @@ export const LangSwitcher = () => {
       <Container>
         <Wrapper>
           <SvgLang />
-          <Select options={options} value={value} onChange={onChange} />
+          <LangToggler options={options} value={value} onChange={onChange} />
         </Wrapper>
       </Container>
     </Header>
@@ -24,7 +23,6 @@ export const Header = styled.header`
 `;
 export const Container = styled.div`
   width: 100%;
-  max-width: 1240px;
   margin: 0 auto;
 `;
 export const Wrapper = styled.div`

@@ -1,13 +1,9 @@
 import { useState, FormEventHandler } from "react";
-import styled from "styled-components";
-
-import { SearchInput } from "./SearchInput";
-import { SearchButton } from "./SearchButton";
-import { SearchList } from "./SearchList";
+import * as S from "./styled";
 import { SearchListItem } from "types";
 
 interface ISearchField {
-  fieldValue: (text: string) => void;
+  submitFieldValue: (text: string) => void;
   selectedItemHandler: (
     value: Omit<SearchListItem, "id" | "weather_icon">
   ) => void;
@@ -16,47 +12,62 @@ interface ISearchField {
 }
 export type onSubmit = FormEventHandler<HTMLFormElement>;
 
-export const SearchField = (props: ISearchField) => {
-  const { fieldValue, isOpen, options, selectedItemHandler } = props;
+const SearchField = ({
+  submitFieldValue,
+  isOpen,
+  options,
+  selectedItemHandler,
+}: ISearchField) => {
   const [value, setValue] = useState("");
 
   const onSubmit: onSubmit = (e) => {
     e.preventDefault();
     if (value !== "") {
-      fieldValue(value);
+      submitFieldValue(value);
       setValue("");
     }
   };
 
   return (
-    <Form onSubmit={onSubmit}>
-      <SearchInput
+    <S.Form role="form" onSubmit={onSubmit}>
+      <S.SearchInput
         onChange={(e) => {
           setValue(e.target.value);
         }}
         value={value}
       />
-      <SearchButton>Add</SearchButton>
-      <SearchList
-        show={isOpen}
-        options={options}
-        selectedItemHandler={selectedItemHandler}
-      />
-    </Form>
+      <S.SearchButton>Add</S.SearchButton>
+
+      <S.List show={isOpen}>
+        {options.length ? (
+          options.map(({ id, name, country, lat, lon, weather_icon }) => {
+            return (
+              <S.Li
+                onClick={() => {
+                  selectedItemHandler({ lat, lon, name, country });
+                }}
+                key={Number(id)}
+              >
+                <span>
+                  {name}, {country}
+                </span>
+                <span>
+                  lat: {lat} lat: {lon}
+                </span>
+                <S.WeatherIcon
+                  src={`https://openweathermap.org/img/wn/${weather_icon}@4x.png`}
+                />
+              </S.Li>
+            );
+          })
+        ) : (
+          <S.Li>
+            Not found. To make search more precise put the city's name
+          </S.Li>
+        )}
+      </S.List>
+    </S.Form>
   );
 };
 
-export const Form = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  position: relative;
-`;
-
-export const WeatherIcon = styled.img.attrs({
-  alt: "weather icon",
-})`
-  width: 24px;
-  background-color: transparent;
-`;
+export default SearchField;

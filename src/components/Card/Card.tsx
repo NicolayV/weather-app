@@ -1,45 +1,54 @@
-import styled from "styled-components";
+import { memo } from "react";
 import { WeatherCard } from "types";
-import { CardFooter } from "./Footer";
-import { CardHeader } from "./Header";
-import { ChartLine } from "./Chart";
+import CardHeader from "./Header";
+import CardFooter from "./Footer";
+import CustomChart from "components/CustomChart";
+import * as S from "./styled";
 
-export const Card = (props: WeatherCard) => {
-  const toggler = (value: string): boolean =>
-    Number(value) > 0 ? true : false;
-
+const Card = ({
+  id,
+  name,
+  country,
+  dt,
+  temp,
+  temp_unit,
+  forecast,
+  weather_icon,
+  weather_description,
+  feels_like,
+  humidity,
+  pressure,
+  wind,
+  deleteCardHandler,
+  toggleTempUnitHandler,
+}: WeatherCard) => {
+  const toggler = Number(temp) > 0 ? true : false;
   return (
-    <CardBase colorToggler={toggler(props.temp)}>
-      <CardHeader {...props} />
-      <Chart>
-        <ChartLine {...props} />
-      </Chart>
-      <CardFooter {...props} />
-    </CardBase>
+    <S.CardBase colorToggler={toggler}>
+      <CardHeader
+        country={country}
+        id={id}
+        name={name}
+        dt={dt}
+        weather_icon={weather_icon}
+        weather_description={weather_description}
+        deleteCardHandler={deleteCardHandler}
+      />
+      <S.Chart>
+        <CustomChart temp={temp} forecast={forecast} />
+      </S.Chart>
+      <CardFooter
+        id={id}
+        temp={temp}
+        temp_unit={temp_unit}
+        feels_like={feels_like}
+        toggleTempUnitHandler={toggleTempUnitHandler}
+        humidity={humidity}
+        pressure={pressure}
+        wind={wind}
+      />
+    </S.CardBase>
   );
 };
 
-export const CardBase = styled.div<{
-  readonly colorToggler: boolean;
-}>`
-  padding: 0.5rem;
-  width: 300px;
-  height: 280px;
-  background-color: ${({ colorToggler }) =>
-    colorToggler ? "var(--orange100)" : "var(--blue100)"};
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  border-radius: var(--radii);
-  box-shadow: var(--base-shadow);
-  &:hover {
-    box-shadow: var(--base-shadow-hover);
-  }
-`;
-export const Chart = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-  background-color: transparent;
-`;
+export default memo(Card);

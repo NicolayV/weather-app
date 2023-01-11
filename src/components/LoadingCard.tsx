@@ -7,14 +7,11 @@ export interface ILoadingCard extends Pick<WeatherCard, "temp"> {
   isVisible: boolean;
 }
 
-export const LoadingCard = (props: ILoadingCard) => {
-  const { temp, isVisible, children } = props;
-
-  const toggler = (value: string): boolean =>
-    Number(value) > 0 ? true : false;
+const LoadingCard = ({ temp, isVisible, children }: ILoadingCard) => {
+  const toggler = Number(temp) > 0 ? true : false;
 
   return (
-    <CardBase isVisible={isVisible} colorToggler={toggler(temp)}>
+    <CardBase isVisible={isVisible} colorToggler={toggler}>
       <Loading>{children}</Loading>
     </CardBase>
   );
@@ -25,7 +22,7 @@ export const CardBase = styled.div<{
   readonly isVisible: boolean;
 }>`
   padding: 0.5rem;
-  width: 300px;
+  width: 350px;
   height: 280px;
 
   background-color: ${({ colorToggler }) =>
@@ -40,6 +37,8 @@ export const CardBase = styled.div<{
   }
   display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
 `;
+
+export default LoadingCard;
 
 export const Loading = styled.div`
   font-size: var(--fs-16);

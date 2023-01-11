@@ -1,20 +1,16 @@
 import { LangSwitcher } from "features/switcher/LangSwitcher";
 import { SearchBar } from "features/search/Search";
-import { List } from "components/List";
+import GridShell from "components/GridShell";
 import { LocalCity } from "features/localCity/LocalCity";
 import { Cities } from "./features/cities/Cities";
 
-const App = () => {
-  return (
-    <>
-      <LangSwitcher />
-      <SearchBar />
-      <List>
-        <LocalCity />
-        <Cities />
-      </List>
-    </>
-  );
-};
-
-export default App;
+export const App = () => (
+  <>
+    <LangSwitcher />
+    <SearchBar />
+    <GridShell>
+      <LocalCity />
+      <Cities />
+    </GridShell>
+  </>
+);

@@ -17,11 +17,11 @@ const useSearch = (): UseSearch => {
     setIsOpen(status === "received" ? true : false);
   }, [status]);
 
-  const inputFieldValue = (city: string) => {
+  const submitFieldValue = (city: string) => {
     dispatch(loadCitiesNames(city));
   };
 
-  const handleOnSearchClick = ({
+  const selectedListItem = ({
     lat,
     lon,
     name,
@@ -31,7 +31,7 @@ const useSearch = (): UseSearch => {
     dispatch(setStatus("idle"));
   };
 
-  return { searchList: list, isOpen, inputFieldValue, handleOnSearchClick };
+  return { searchList: list, isOpen, submitFieldValue, selectedListItem };
 };
 
 export { useSearch };

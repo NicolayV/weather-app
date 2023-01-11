@@ -1,10 +1,10 @@
 import React from "react";
 import { useSearch } from "./useSearch";
 import styled from "styled-components";
-import { SearchField } from "components/SearchField/SearchField";
+import SearchField from "components/SearchField/SearchField";
 
 export const SearchBar = () => {
-  const { isOpen, searchList, inputFieldValue, handleOnSearchClick } =
+  const { isOpen, searchList, submitFieldValue, selectedListItem } =
     useSearch();
 
   return (
@@ -13,8 +13,8 @@ export const SearchBar = () => {
         <SearchField
           isOpen={isOpen}
           options={searchList}
-          fieldValue={inputFieldValue}
-          selectedItemHandler={handleOnSearchClick}
+          submitFieldValue={submitFieldValue}
+          selectedItemHandler={selectedListItem}
         />
       </Wrapper>
     </Container>
@@ -23,7 +23,6 @@ export const SearchBar = () => {
 
 export const Container = styled.div`
   width: 100%;
-  max-width: 1240px;
   margin: 0 auto;
 `;
 export const Wrapper = styled.div`

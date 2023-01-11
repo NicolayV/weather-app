@@ -1,4 +1,5 @@
 import { nanoid } from "@reduxjs/toolkit";
+import { dateFormatter, dayMonthFormatter } from "utils/dateFormatter";
 import { City, FetchCity } from "types";
 
 export function stateAdapter(fetchData: FetchCity): City {
@@ -12,8 +13,7 @@ export function stateAdapter(fetchData: FetchCity): City {
     country: country,
     lat: latitude.toString(),
     lon: longitude.toString(),
-
-    dt: (dt * 1000).toString(),
+    dt: dateFormatter(dt * 1000),
     weather_icon: weather[0].icon,
     weather_description: weather[0].main,
 
@@ -26,7 +26,7 @@ export function stateAdapter(fetchData: FetchCity): City {
     pressure: pressure.toString(),
 
     forecast: daily.map((day: { dt: number; temp: { day: number } }) => ({
-      dt: (day.dt * 1000).toString(),
+      dt: dayMonthFormatter(day.dt * 1000),
       temp: day.temp.day.toFixed(),
     })),
   };

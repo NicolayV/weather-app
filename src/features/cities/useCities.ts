@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "store";
 import { deleteCity, selectCities, updateCity } from "./citiesSlice";
@@ -7,13 +8,19 @@ const useCities = (): UseCities => {
   const dispatch = useAppDispatch();
   const { list } = useSelector(selectCities);
 
-  const deleteCardHandler = (id: string) => {
-    dispatch(deleteCity(id));
-  };
+  const deleteCardHandler = useCallback(
+    (id: string) => {
+      dispatch(deleteCity(id));
+    },
+    [dispatch]
+  );
 
-  const toggleTempUnitHandler = (id: string) => {
-    dispatch(updateCity(id));
-  };
+  const toggleTempUnitHandler = useCallback(
+    (id: string) => {
+      dispatch(updateCity(id));
+    },
+    [dispatch]
+  );
 
   return { listOfCities: list, deleteCardHandler, toggleTempUnitHandler };
 };

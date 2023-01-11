@@ -1,8 +1,8 @@
-import { Axios } from "axios";
-import * as API from "config";
+import * as API from "api";
+export type Api = typeof API;
 
 export type Extra = {
-  client: Axios;
+  client: <T>(props: string) => Promise<T>;
   api: typeof API;
 };
 export type Languages = "EN" | "UA" | "RU";
@@ -38,7 +38,6 @@ export interface WeatherCard extends City {
   deleteCardHandler: (id: string) => void;
   toggleTempUnitHandler: (id: string) => void;
 }
-
 export interface SearchListItem
   extends Pick<
     City,

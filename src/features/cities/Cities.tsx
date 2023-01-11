@@ -1,5 +1,5 @@
 import { City } from "types";
-import { Card } from "../../components/Card/Card";
+import Card from "components/Card/Card";
 import { useCities } from "./useCities";
 
 export const Cities = () => {
